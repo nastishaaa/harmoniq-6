@@ -1,0 +1,18 @@
+post:
+  tags:
+    - Auth
+  summary: Register a new user
+  operationId: registerUser
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/auth.yaml#/AuthUser'
+  responses:
+    '201':
+      description: User successfully registered
+    '400':
+      $ref: '../../components/responses/400.yaml'
+    '409':
+      description: Email already exists

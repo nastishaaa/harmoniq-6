@@ -1,1 +1,60 @@
-{}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Harmoniq app",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "This is a documentation of Harmoniq app"
+  },
+  "tags": [
+    {
+      "name": "Harmoniq",
+      "description": "Operations about users."
+    },
+    {
+      "name": "Auth",
+      "description": "Authentication and authorization routes."
+    }
+  ],
+  "servers": [
+    { "url": "http://localhost:3000" },
+    { "url": "https://example.com/api/v1" }
+  ],
+  "paths": {
+    "/auth/register": { "$ref": "../swagger/paths/auth/register.yaml" },
+    "/auth/login": { "$ref": "../swagger/paths/auth/login.yaml" },
+    "/auth/logout": { "$ref": "../swagger/paths/auth/logout.yaml" },
+    "/auth/refresh": { "$ref": "../swagger/paths/auth/refresh.yaml" }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "AuthUser": {
+        "$ref": "../swagger/components/schemas/auth.yaml#/AuthUser"
+      },
+      "LoginResponse": {
+        "$ref": "../swagger/components/schemas/auth.yaml#/LoginResponse"
+      },
+      "RefreshTokenRequest": {
+        "$ref": "../swagger/components/schemas/auth.yaml#/RefreshTokenRequest"
+      }
+    },
+    "responses": {
+      "401": { "$ref": "../swagger/components/responses/401.yaml" },
+      "400": { "$ref": "../swagger/components/responses/400.yaml" }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
