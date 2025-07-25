@@ -1,0 +1,7 @@
+tags:
+  - Articles
+summary: Get list of articles
+operationId: getArticles
+description: Get list of articles
+security:
+  - bearerAuth: []
