@@ -27,8 +27,8 @@ paths:
   /articles/{articleId}:
     get:
       $ref: ../swagger/paths/articles/{articleId}/get.yaml
-    put:
-      $ref: ../swagger/paths/articles/{articleId}/put.yaml
+    patch:
+      $ref: ../swagger/paths/articles/{articleId}/patch.yaml
     delete:
       $ref: ../swagger/paths/articles/{articleId}/delete.yaml
   /auth/login:
