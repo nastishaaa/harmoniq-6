@@ -1,0 +1,7 @@
+tags:
+  - Articles
+summary: Create Articles
+operationId: createArticles
+description: Create Articles
+security:
+  - bearerAuth: []

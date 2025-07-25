@@ -1,0 +1,7 @@
+tags:
+  - Auth
+summary: Refresh access token
+operationId: refreshToken
+description: Get a new access token using refresh token from cookie
+security:
+  - bearerAuth: []

@@ -1,0 +1,14 @@
+tags:
+  - Articles
+summary: Get article by id
+operationId: getArticle
+description: Get article by id
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: articleId
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'

@@ -1,0 +1,7 @@
+tags:
+  - User
+summary: Get list of saved articles
+operationId: getUserSavedArticles
+description: Get list of saved articles
+security:
+  - bearerAuth: []

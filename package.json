@@ -29,6 +29,8 @@
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "http-errors": "^2.0.0",
-    "pino-http": "^10.5.0"
+    "mongoose": "^8.16.4",
+    "pino-http": "^10.5.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }

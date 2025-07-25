@@ -1,0 +1,14 @@
+tags:
+  - Articles
+summary: Delete articles by id
+operationId: deleteArticles
+description: Delete articles by id
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: articleId
+    required: true
+    schema:
+      type: string
+      example: '65ca67e7ae7f10c88b598384'
