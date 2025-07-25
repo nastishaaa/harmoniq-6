@@ -1,0 +1,7 @@
+tags:
+  - User
+summary: Get current user's profile
+operationId: getUserProfile
+description: Get current user's profile
+security:
+  - bearerAuth: []

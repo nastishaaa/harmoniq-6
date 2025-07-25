@@ -1,0 +1,7 @@
+tags:
+  - Categories
+summary: Get list of available categories
+operationId: getCategories
+description: Get list of available categories
+security:
+  - bearerAuth: []
