@@ -6,35 +6,35 @@ import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser';
-import { swaggerDocs } from './middlewares/swaggerDocs.js';
+import { swaggerDocs, swaggerServe } from './middlewares/swaggerDocs.js';
 
 dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000;
 
 export const startServer = async () => {
-  const app = express();
+    const app = express();
 
-  app.use(express.json());
-  app.use(cors());
-  app.use(cookieParser());
+    app.use(express.json());
+    app.use(cors());
+    app.use(cookieParser());
 
-  app.use(
+    app.use(
     pino({
-      transport: {
+        transport: {
         target: 'pino-pretty',
-      },
+    },
     }),
-  );
+    );
 
-  app.use('/api-docs', swaggerDocs);
+    app.use('/api-docs', swaggerServe, swaggerDocs);
 
-  app.use('/', router);
+    app.use('/', router);
 
-  app.use(notFoundHandler);
-  app.use(errorHandler);
+    app.use(notFoundHandler);
+    app.use(errorHandler);
 
-  app.listen(PORT, () => {
+    app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
