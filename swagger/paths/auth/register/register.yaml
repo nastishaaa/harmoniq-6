@@ -1,0 +1,7 @@
+tags:
+  - Auth
+summary: Register new user
+operationId: registerUser
+description: Register a new user with email and password
+security:
+  - bearerAuth: []

@@ -1,0 +1,7 @@
+tags:
+  - Auth
+summary: logout user
+operationId: logoutUser
+description: Permanently logout a contact by its unique identifier.
+security:
+  - bearerAuth: []
