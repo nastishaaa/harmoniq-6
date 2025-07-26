@@ -1,0 +1,7 @@
+tags:
+  - Auth
+summary: Login user
+operationId: loginUser
+description: Login user with email and password
+security:
+  - bearerAuth: []

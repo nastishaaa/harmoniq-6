@@ -1,0 +1,7 @@
+tags:
+  - User
+summary: Get articles created by the current user
+operationId: getUserCreated
+description: Get articles created by the current user
+security:
+  - bearerAuth: []

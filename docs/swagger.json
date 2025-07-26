@@ -17,48 +17,473 @@
       "url": "https://example.com/api/v1"
     }
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "tags": [
     {
-      "name": "Harmoniq",
-      "description": "Operations about users."
+      "name": "Auth",
+      "description": "Auth operations."
     },
     {
-      "name": "Auth",
-      "description": "Authentication and authorization routes."
+      "name": "User",
+      "description": "User profiles and avatars"
+    },
+    {
+      "name": "Articles",
+      "description": "Managing articles"
+    },
+    {
+      "name": "Categories",
+      "description": "Article categories"
     }
   ],
   "paths": {
-    "/auth/register": {
+    "/articles": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Get list of articles",
+        "operationId": "getArticles",
+        "description": "Get list of articles with optional pagination, sorting and filtering",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1,
+              "description": "Page number (default is 1)"
+            }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 12,
+              "description": "Number of articles per page (default is 12)"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "createdAt",
+              "description": "Field to sort by (e.g. createdAt, title). Default is _id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "asc",
+              "description": "Sort order direction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found articles"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 12
+                        },
+                        "totalItems": {
+                          "type": "number",
+                          "example": 12
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 12
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
       "post": {
         "tags": [
-          "Auth"
+          "Articles"
         ],
-        "summary": "Register a new user",
-        "operationId": "registerUser",
+        "summary": "Create Articles",
+        "operationId": "createArticles",
+        "description": "Creating a new article (authorized user)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
-          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/AuthUser"
+                "type": "object",
+                "required": [
+                  "title",
+                  "desc",
+                  "article",
+                  "img",
+                  "authorName",
+                  "date"
+                ],
+                "properties": {
+                  "authorName": {
+                    "description": "Article's name",
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 50,
+                    "example": "Анастасія Олійник"
+                  },
+                  "title": {
+                    "description": "Article title",
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 48,
+                    "example": "Коли тривога заповнює простір: шлях до спокою"
+                  },
+                  "desc": {
+                    "description": "Article short description",
+                    "type": "string",
+                    "minLength": 100,
+                    "maxLength": 4000,
+                    "example": "Медитації, які допомагають відновити внутрішній спокій"
+                  },
+                  "img": {
+                    "description": "Article photo (required, maximum 1MB)",
+                    "format": "binary",
+                    "type": "string",
+                    "example": "https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg"
+                  },
+                  "date": {
+                    "description": "Article creation date (YYYY-MM-DD)",
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "example": "2025-03-27"
+                  },
+                  "article": {
+                    "description": "Full article content",
+                    "type": "string",
+                    "example": "У кожного з нас бувають моменти, коли тривога наче туман огортає думки…"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "User successfully registered"
+            "description": "Successfully created a article",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a article!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/articles"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/400"
           },
-          "409": {
-            "description": "Email already exists"
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/articles/{articleId}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Get article by id",
+        "operationId": "getArticle",
+        "description": "Unique identifier of the article to retrieve",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the full article object by provided ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found article with provided ID"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Update article by id",
+        "operationId": "updateArticle",
+        "description": "Update article by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "authorName": {
+                    "description": "Article's name",
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 50,
+                    "example": "Анастасія Олійник"
+                  },
+                  "title": {
+                    "description": "Article title",
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 48,
+                    "example": "Коли тривога заповнює простір: шлях до спокою"
+                  },
+                  "desc": {
+                    "description": "Article short description",
+                    "type": "string",
+                    "minLength": 100,
+                    "maxLength": 4000,
+                    "example": "Медитації, які допомагають відновити внутрішній спокій"
+                  },
+                  "img": {
+                    "description": "Article photo (required, maximum 1MB)",
+                    "format": "binary",
+                    "type": "string",
+                    "example": "https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg"
+                  },
+                  "date": {
+                    "description": "Article creation date (YYYY-MM-DD)",
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "example": "2025-03-27"
+                  },
+                  "article": {
+                    "description": "Full article content",
+                    "type": "string",
+                    "example": "У кожного з нас бувають моменти, коли тривога наче туман огортає думки…"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated an article!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully updated an article!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Delete articles by id",
+        "operationId": "deleteArticles",
+        "description": "Delete articles by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "required": true,
+            "description": "ID of the article to delete",
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Article successfully deleted. No content returned."
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
@@ -70,31 +495,12 @@
         ],
         "summary": "Login user",
         "operationId": "loginUser",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuthUser"
-              }
-            }
+        "description": "Login user with email and password",
+        "security": [
+          {
+            "bearerAuth": []
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Login successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          }
-        }
+        ]
       }
     },
     "/auth/logout": {
@@ -102,21 +508,14 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Logout user",
+        "summary": "logout user",
         "operationId": "logoutUser",
+        "description": "Permanently logout a contact by its unique identifier.",
         "security": [
           {
             "bearerAuth": []
           }
-        ],
-        "responses": {
-          "204": {
-            "description": "Logged out successfully"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          }
-        }
+        ]
       }
     },
     "/auth/refresh": {
@@ -124,33 +523,128 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Refresh tokens",
+        "summary": "Refresh access token",
         "operationId": "refreshToken",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshTokenRequest"
-              }
+        "description": "Get a new access token using refresh token from cookie",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register new user",
+        "operationId": "registerUser",
+        "description": "Register a new user with email and password",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get current user's profile",
+        "operationId": "getUserProfile",
+        "description": "Get current user's profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/saved": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get list of saved articles",
+        "operationId": "getUserSavedArticles",
+        "description": "Get list of saved articles",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Save an article to user's saved list",
+        "operationId": "saveArticleToUser",
+        "description": "Save an article to user's saved list",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/saved/{articleId}": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Remove saved article by ID",
+        "operationId": "deleteUserSavedArticle",
+        "description": "Remove saved article by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "New tokens issued",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
+        ]
+      }
+    },
+    "/users/created": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get articles created by the current user",
+        "operationId": "getUserCreated",
+        "description": "Get articles created by the current user",
+        "security": [
+          {
+            "bearerAuth": []
           }
-        }
+        ]
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get list of available categories",
+        "operationId": "getCategories",
+        "description": "Get list of available categories",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -162,58 +656,82 @@
       }
     },
     "schemas": {
-      "AuthUser": {
+      "articles": {
         "type": "object",
         "required": [
-          "name",
-          "email",
-          "password"
+          "_id",
+          "title",
+          "desc",
+          "article",
+          "rate",
+          "img",
+          "ownerId",
+          "authorName",
+          "date"
         ],
         "properties": {
-          "name": {
+          "_id": {
+            "description": "Article id",
             "type": "string",
-            "example": "John Doe"
+            "example": "68498236a100312bea078fe6"
           },
-          "email": {
+          "title": {
+            "description": "Article title",
             "type": "string",
-            "format": "email",
-            "example": "user@example.com"
+            "minLength": 3,
+            "maxLength": 48,
+            "example": "Коли тривога заповнює простір: шлях до спокою"
           },
-          "password": {
+          "desc": {
+            "description": "Article short description",
             "type": "string",
-            "example": "Password123"
-          }
-        }
-      },
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "JWT access token"
+            "minLength": 100,
+            "maxLength": 4000,
+            "example": "Медитації, які допомагають відновити внутрішній спокій"
           },
-          "refreshToken": {
+          "article": {
+            "description": "Full article content",
             "type": "string",
-            "description": "JWT refresh token"
-          }
-        }
-      },
-      "RefreshTokenRequest": {
-        "type": "object",
-        "required": [
-          "refreshToken"
-        ],
-        "properties": {
-          "refreshToken": {
+            "example": "У кожного з нас бувають моменти, коли тривога наче туман огортає думки…"
+          },
+          "rate": {
+            "description": "Article rating",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 16
+          },
+          "ownerId": {
+            "description": "Article author's user ID",
             "type": "string",
-            "example": "your_refresh_token_here"
+            "example": "68498236a100312bea078fe6"
+          },
+          "img": {
+            "description": "Image URL",
+            "format": "binary",
+            "type": "string",
+            "example": "https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg"
+          },
+          "date": {
+            "description": "Article creation date (YYYY-MM-DD)",
+            "type": "string",
+            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "example": "2025-03-27"
+          },
+          "authorName": {
+            "description": "Author's full name",
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 50,
+            "example": "Анастасія Олійник"
           }
         }
       }
     },
     "responses": {
       "400": {
-        "description": "Bad request error",
+        "description": "Bad Request",
         "content": {
           "application/json": {
             "schema": {
@@ -264,7 +782,44 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Access token expired"
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "NotFoundError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Not found"
                     }
                   }
                 }

@@ -1,0 +1,7 @@
+tags:
+  - User
+summary: Save an article to user's saved list
+operationId: saveArticleToUser
+description: Save an article to user's saved list
+security:
+  - bearerAuth: []
