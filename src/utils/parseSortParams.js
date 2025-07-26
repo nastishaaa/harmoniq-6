@@ -1,13 +1,28 @@
-export const parseSortParams = (query = {}) => {
-  const { sort, sortBy, sortOrder } = query;
+import { SORT_ORDER } from "../index.js";
 
-  if (sort === 'popular') {
-    return { sortBy: 'rate', sortOrder: 'desc' };
-  }
+const parseSortOrder = (sortOrder) => {
+    const isKnownOrder = [SORT_ORDER.ASC, SORT_ORDER.DESC].includes(sortOrder);
+    if (isKnownOrder) return sortOrder;
+    return SORT_ORDER.ASC;
+};
 
-  if (sortBy && sortOrder) {
-    return { sortBy, sortOrder: sortOrder.toLowerCase() };
-  }
+const parseSortBy = (sortBy) => {
+    const keysOfArticle = 'rate';
 
-  return { sortBy: 'createdAt', sortOrder: 'desc' };
+    if (keysOfArticle) {
+        return sortBy;
+    }
+    return 'rate';
+};
+
+export const parseSortParams = (query) => {
+    const { sortOrder, sortBy } = query;
+
+    const parsedSortOrder = parseSortOrder(sortOrder);
+    const parsedSortBy = parseSortBy(sortBy);
+
+    return {
+    sortOrder: parsedSortOrder,
+    sortBy: parsedSortBy,
+    };
 };
