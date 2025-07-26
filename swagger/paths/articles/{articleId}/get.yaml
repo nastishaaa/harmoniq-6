@@ -2,7 +2,7 @@ tags:
   - Articles
 summary: Get article by id
 operationId: getArticle
-description: Get article by id
+description: Unique identifier of the article to retrieve
 security:
   - bearerAuth: []
 parameters:
@@ -12,3 +12,28 @@ parameters:
     schema:
       type: string
       example: '65ca67e7ae7f10c88b598384'
+responses:
+  '200':
+    description: Returns the full article object by provided ID
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully found article with provided ID
+            data:
+              type: object
+              $ref: ../../../components/schemas/articles.yaml
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
