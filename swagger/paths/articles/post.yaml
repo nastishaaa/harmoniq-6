@@ -2,6 +2,77 @@ tags:
   - Articles
 summary: Create Articles
 operationId: createArticles
-description: Create Articles
+description: Creating a new article (authorized user)
 security:
   - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - title
+          - desc
+          - article
+          - img
+          - authorName
+          - date
+        properties:
+          authorName:
+            description: "Article's name"
+            type: string
+            minLength: 4
+            maxLength: 50
+            example: 'Анастасія Олійник'
+          title:
+            description: Article title
+            type: string
+            minLength: 3
+            maxLength: 48
+            example: 'Коли тривога заповнює простір: шлях до спокою'
+          desc:
+            description: Article short description
+            type: string
+            minLength: 100
+            maxLength: 4000
+            example: 'Медитації, які допомагають відновити внутрішній спокій'
+          img:
+            description: Article photo (required, maximum 1MB)
+            format: binary
+            type: string
+            example: 'https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg'
+          date:
+            description: Article creation date (YYYY-MM-DD)
+            type: string
+            format: date
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+            example: 2025-03-27
+          article:
+            description: Full article content
+            type: string
+            example: 'У кожного з нас бувають моменти, коли тривога наче туман огортає думки…'
+responses:
+  '201':
+    description: 'Successfully created a article'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a article!
+            data:
+              type: object
+              $ref: ../../components/schemas/articles.yaml
+  '400':
+    $ref: ../../components/responses/400.yaml
+  '401':
+    $ref: ../../components/responses/401.yaml
