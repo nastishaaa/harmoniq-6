@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "version": "1.0.0",
-    "title": "Harmoniq App",
+    "title": "Harmoniq app",
+    "description": "This is a documentation of Harmoniq app",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "description": "API for articles, authentication, and user management"
+    }
   },
   "servers": [
     {
@@ -738,8 +738,7 @@
               "type": "object",
               "required": [
                 "status",
-                "message",
-                "data"
+                "message"
               ],
               "properties": {
                 "status": {
@@ -749,18 +748,6 @@
                 "message": {
                   "type": "string",
                   "example": "BadRequest"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Bad Request"
-                    }
-                  }
                 }
               }
             }
