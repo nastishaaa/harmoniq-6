@@ -27,7 +27,8 @@ export const startServer = async () => {
     }),
   );
 
-  // app.use('/api-docs', swaggerServe, swaggerDocs);
+  app.use('/api-docs', swaggerServe, swaggerDocs);
+
   app.use('/', router);
 
   app.use(notFoundHandler);

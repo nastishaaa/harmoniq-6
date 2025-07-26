@@ -5,7 +5,7 @@ import {
   getCreatedArticles,
   addSavedArticle,
   removeSavedArticle,
-} from '../controllers/user.controller.js';
+} from '../controllers/user.js';
 // import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
