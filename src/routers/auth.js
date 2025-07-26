@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import {
-  authorizeWithGoogleController,
-  getGoogleOauthUrlController,
   loginUserController,
   logoutUserController,
   refreshSessionController,
@@ -14,12 +12,14 @@ import { registerUserValidationSchema } from '../validation/registerUserValidati
 import { loginUserValidationSchema } from '../validation/loginUserValidationSchema.js';
 import { requestResetPasswordEmailValidationSchema } from '../validation/requestResetPasswordEmailValidationSchema.js';
 import { resetPasswordValidationSchema } from '../validation/resetPasswordValidationSchema.js';
-import { authorizeWithGoogleOAuthValidationSchema } from '../validation/authorize-with-google-ouath.js';
+
+import { upload } from '../middlewares/multer.js';
 
 const authRouter = Router();
 
 authRouter.post(
   '/register',
+  upload.single('avatar'),
   validateBody(registerUserValidationSchema),
   registerUserController,
 );
@@ -41,12 +41,6 @@ authRouter.post(
   '/reset-pwd',
   validateBody(resetPasswordValidationSchema),
   resetPasswordController,
-);
-authRouter.post('/get-google-oauth-link', getGoogleOauthUrlController);
-authRouter.post(
-  '/authorize-with-google-oauth',
-  validateBody(authorizeWithGoogleOAuthValidationSchema),
-  authorizeWithGoogleController,
 );
 
 export default authRouter;
