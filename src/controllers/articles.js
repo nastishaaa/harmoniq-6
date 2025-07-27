@@ -8,8 +8,7 @@ import createHttpError from 'http-errors';
 export const getAllArticlesController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
         const { sortOrder, sortBy } = parseSortParams(req.query);
-        const ownerId = req.user._id;
-    const articles = await getAllArticles({ page, perPage, sortOrder, sortBy, ownerId });
+    const articles = await getAllArticles({ page, perPage, sortOrder, sortBy });
 
     res.json({
             status: 200,
@@ -19,10 +18,9 @@ export const getAllArticlesController = async (req, res) => {
 };
 
 export const getArticleByIdController = async (req, res) => {
-    const ownerId = req.user._id;
     const { articleId } = req.params;
 
-    const article = await getArticleById(articleId, ownerId);
+    const article = await getArticleById(articleId);
 
     if (!article) {
         throw createHttpError(404, 'Article not found');

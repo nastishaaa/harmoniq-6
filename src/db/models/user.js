@@ -47,4 +47,4 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-export default mongoose.model('user', userSchema); //Це створить колекцію users (mongoose сам додає s)
+export default mongoose.model('user', userSchema); 

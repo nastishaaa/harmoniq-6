@@ -13,7 +13,7 @@ import {
 
 const articlesRouter = Router();
 
-articlesRouter.use(authenticate);
+// articlesRouter.use(authenticate);
 
 articlesRouter.get('/', getAllArticlesController);
 
@@ -21,6 +21,7 @@ articlesRouter.get('/:articleId', isValidId, getArticleByIdController);
 
 articlesRouter.post(
   '/',
+  authenticate,
   upload.single('img'),
   createArticleController,
 );
@@ -28,10 +29,11 @@ articlesRouter.post(
 articlesRouter.patch(
   '/:articleId',
   isValidId,
+  authenticate,
   upload.single('img'),
   patchArticleController,
 );
 
-articlesRouter.delete('/:articleId', isValidId, deleteArticleController);
+articlesRouter.delete('/:articleId', isValidId, authenticate, deleteArticleController);
 
 export default articlesRouter;
