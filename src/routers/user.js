@@ -6,11 +6,11 @@ import {
   addSavedArticle,
   removeSavedArticle,
 } from '../controllers/user.js';
-// import { authenticate } from '../middlewares/authenticate.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
-// router.use(authenticate);
+router.use(authenticate);
 
 router.get('/me', getCurrentUser);
 router.get('/me/saved-articles', getSavedArticles);

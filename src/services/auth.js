@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 
-import { User } from '../db/models/user.js';
+import User from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import jwt from 'jsonwebtoken';
 import { getEnvVar } from '../utils/getEnvVar.js';
@@ -42,7 +42,7 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
+  const user = await User.findOne({ email: payload.email }).select('+password');
 
   if (!user) {
     throw createHttpError(401, 'User login and password does not match!');
