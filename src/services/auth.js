@@ -42,7 +42,7 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
+  const user = await User.findOne({ email: payload.email }).select('+password');
 
   if (!user) {
     throw createHttpError(401, 'User login and password does not match!');

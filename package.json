@@ -33,12 +33,12 @@
     "handlebars": "^4.7.8",
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
+    "streamifier": "^0.1.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.4",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.5",
     "pino-http": "^10.5.0",
-    "streamifier": "^0.1.1",
     "swagger-ui-express": "^5.0.1"
   }
 }

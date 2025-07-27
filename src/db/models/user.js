@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
-      maxlength: [64, 'Password cannot exceed 64 characters']
+      maxlength: [64, 'Password cannot exceed 64 characters'],
+      select: false,
     },
     avatarUrl: {
       type: String,
@@ -43,8 +44,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    versionKey: false
   },
 );
 
-export default mongoose.model('User', userSchema); 
+export default mongoose.model('user', userSchema); //Це створить колекцію users (mongoose сам додає s)
