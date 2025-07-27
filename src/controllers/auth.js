@@ -8,12 +8,14 @@ import {
 } from '../services/auth.js';
 
 const setupSessionCookies = (session, res) => {
-  res.cookie('sessionId', session.id, {
+  res.cookie('sessionId', session._id, {
     httpOnly: true,
+    secure: false,
     expires: session.refreshTokenValidUntil,
   });
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
+    secure: false,
     expires: session.refreshTokenValidUntil,
   });
 };

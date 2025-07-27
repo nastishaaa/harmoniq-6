@@ -35,13 +35,13 @@ export const articleValidationSchema = Joi.object({
             'date.format': 'The date must be in YYYY-MM-DD format',
         }),
 
-    author: Joi.string()
-        .min(4)
-        .max(50)
-        .required()
-        .messages({
-            'string.empty': 'The author field is required',
-            'string.min': 'The author name must be at least 4 characters long',
-            'string.max': 'The author name must not exceed 50 characters',
-        }),
+    // author: Joi.string()
+    //     .min(4)
+    //     .max(50)
+    //     .required()
+    //     .messages({
+    //         'string.empty': 'The author field is required',
+    //         'string.min': 'The author name must be at least 4 characters long',
+    //         'string.max': 'The author name must not exceed 50 characters',
+    //     }),
 });

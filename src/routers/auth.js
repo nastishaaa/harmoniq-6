@@ -7,12 +7,11 @@ import {
   requestResetPasswordEmailController,
   resetPasswordController,
 } from '../controllers/auth.js';
-import { validateBody } from '../middlewares/validate-body-middleware.js';
+import { validateBody } from '../middlewares/validateBody.js';
 import { registerUserValidationSchema } from '../validation/registerUserValidationSchema.js';
 import { loginUserValidationSchema } from '../validation/loginUserValidationSchema.js';
 import { requestResetPasswordEmailValidationSchema } from '../validation/requestResetPasswordEmailValidationSchema.js';
 import { resetPasswordValidationSchema } from '../validation/resetPasswordValidationSchema.js';
-
 import { upload } from '../middlewares/multer.js';
 
 const authRouter = Router();
