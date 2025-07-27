@@ -1,0 +1,12 @@
+description: Avatar file is too large (max size 1MB)
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 413
+        message:
+          type: string
+          example: Avatar file too large

@@ -5,3 +5,59 @@ operationId: loginUser
 description: Login user with email and password
 security:
   - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            description: Email address of the user
+            type: string
+            format: email
+            maxLength: 64
+            pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+            example: 'anastasiaoliynyk@mail.com'
+          password:
+            description: Password of the user
+            type: string
+            format: password
+            minLength: 8
+            maxLength: 64
+            pattern: ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$
+            example: 'Password123'
+responses:
+  '200':
+    description: Successfully logged in an user!
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully logged in an user!
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  example: v4ZILl3+mLqnnwtNqQmpf/Lrey4s+D2DUFBNPcKF
+
+  '400':
+    $ref: ../../../components/responses/400.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml
