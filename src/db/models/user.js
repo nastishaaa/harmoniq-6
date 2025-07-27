@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
+      minlength: [8, 'Password must be at least 8 characters'],
       maxlength: [64, 'Password cannot exceed 64 characters'],
       select: false,
     },
@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
     ],
   },
   {
-    timestamps: true,
+    timestamps: true, versionKey: false
   },
 );
 

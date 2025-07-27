@@ -7,7 +7,7 @@ import createHttpError from 'http-errors';
 
 export const getAllArticlesController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
-        const { sort, sortOrder, sortBy } = parseSortParams(req.query);
+        const { sortOrder, sortBy } = parseSortParams(req.query);
         const ownerId = req.user._id;
     const articles = await getAllArticles({ page, perPage, sortOrder, sortBy, ownerId });
 
@@ -38,6 +38,7 @@ export const getArticleByIdController = async (req, res) => {
 export const createArticleController = async (req, res) => {
     const ownerId = req.user._id;
     const photo = req.file;
+
     let photoUrl;
 
     if (photo) {
@@ -48,7 +49,7 @@ export const createArticleController = async (req, res) => {
         }
     }
 
-        const article = await createArticle({ ...req.body, photo: photoUrl }, ownerId);
+        const article = await createArticle({ ...req.body, img: photoUrl }, ownerId);
 
         res.status(201).json({
             status: 201,

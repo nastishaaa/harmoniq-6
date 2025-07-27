@@ -8,31 +8,40 @@ const articleSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        required: true,
+        required: [true, 'Поле назва статті є обовʼязковим'],
+        minlength: [3, 'Назва статті має містити щонайменше 3 символи'],
+        maxlength: [48, 'Назва статті має містити не більше 48 символів'],
     },
     desc: {
         type: String,
-        required: true,
-    },
-    article: {
-        type: String,
-        required: true,
-    },
-    rate: {
-        type: Number,
+        required: [true, 'Поле опис статті є обовʼязковим'],
+        minlength: [100, 'Опис статті має містити щонайменше 100 символів'],
+        maxlength: [4000, 'Опис статті має містити не більше 4000 символів'],
     },
     img: {
         type: String,
-        default: null,
+        required: [true, 'Фото статті є обовʼязковим'],
     },
     date: {
         type: Date,
-        default: Date.now,
+        required: [true, 'Дата є обовʼязковою'],
+        validate: {
+            validator: function (v) {
+                // Перевірка на формат 'рррр-мм-дд'
+                return /^\d{4}-\d{2}-\d{2}$/.test(v.toISOString().split('T')[0]);
+            },
+            message: props => `Дата повинна бути у форматі 'рррр-мм-дд'`,
+        },
     },
-
+    authorName: {
+        type: String,
+        required: [true, 'Імʼя автора є обовʼязковим'],
+        minlength: [4, 'Імʼя автора має містити щонайменше 4 символи'],
+        maxlength: [50, 'Імʼя автора має містити не більше 50 символів'],
+    },
 }, {
-    timestamps: true, versionKey: false
+    timestamps: true,
+    versionKey: false
 });
-
 
 export const Article = mongoose.model('article', articleSchema);
