@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      minlength: [6, 'Password must be at least 6 characters'],
+      minlength: [8, 'Password must be at least 8 characters'],
       maxlength: [64, 'Password cannot exceed 64 characters'],
       select: false,
     },
@@ -38,13 +38,15 @@ const userSchema = new mongoose.Schema(
     savedArticles: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
+        ref: 'article',
       },
     ],
   },
   {
-    timestamps: true, versionKey: false
+    timestamps: true,
+    versionKey: false,
   },
 );
 
 export default mongoose.model('user', userSchema); 
+

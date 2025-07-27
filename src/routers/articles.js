@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { authenticate } from '../middlewares/authenticate.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { articleValidationSchema } from '../validation/articles.js';
 import { upload } from '../middlewares/multer.js';
+import { attachImg } from '../middlewares/attachImg.js';
 
 import {
   createArticleController,
@@ -23,6 +26,8 @@ articlesRouter.post(
   '/',
   authenticate,
   upload.single('img'),
+  attachImg,
+  validateBody(articleValidationSchema),
   createArticleController,
 );
 
@@ -31,6 +36,8 @@ articlesRouter.patch(
   isValidId,
   authenticate,
   upload.single('img'),
+  attachImg,
+  validateBody(articleValidationSchema),
   patchArticleController,
 );
 
