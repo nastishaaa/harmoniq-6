@@ -4,33 +4,47 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name is required'],
+      minlength: [2, 'Name must be at least 2 characters'],
+      maxlength: [32, 'Name cannot exceed 32 characters'],
+      trim: true,
     },
     email: {
       type: String,
+      required: [true, 'Email is required'],
       unique: true,
-      required: true,
+      maxlength: [64, 'Email cannot exceed 64 characters'],
+      validate: {
+        validator: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+        message: 'Invalid email format',
+      },
+      lowercase: true,
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Password is required'],
+      minlength: [6, 'Password must be at least 6 characters'],
+      maxlength: [64, 'Password cannot exceed 64 characters']
     },
-    savedArticles: {
-      type: [String], // або ObjectId, якщо той чия секція прописував окрему модель Article
-      default: [],
+    avatarUrl: {
+      type: String,
+      default: '',
     },
+    articlesAmount: {
+      type: Number,
+      default: 0,
+    },
+    savedArticles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Article',
+      },
+    ],
   },
   {
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   },
 );
 
-userSchema.methods.toJSON = function () {
-  const obj = this.toObject();
-  delete obj.password;
-  return obj;
-};
-
-export const User = mongoose.model('User', userSchema);
-
+export default mongoose.model('User', userSchema); 
