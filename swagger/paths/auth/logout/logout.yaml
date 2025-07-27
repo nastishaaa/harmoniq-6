@@ -2,6 +2,13 @@ tags:
   - Auth
 summary: logout user
 operationId: logoutUser
-description: Permanently logout a contact by its unique identifier.
+description: Logout the currently authenticated user by invalidating the access token.
 security:
   - bearerAuth: []
+responses:
+  '204':
+    description: User successfully logged out.
+  '400':
+    $ref: ../../../components/responses/400.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml
