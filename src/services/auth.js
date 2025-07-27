@@ -1,10 +1,10 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
-import Handlebars from 'handlebars';
-import path from 'node:path';
-import fs from 'node:fs';
 import jwt from 'jsonwebtoken';
+import fs from 'node:fs';
+import path from 'node:path';
+import Handlebars from 'handlebars';
 
 import User from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
