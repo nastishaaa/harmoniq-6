@@ -38,13 +38,14 @@ const userSchema = new mongoose.Schema(
     savedArticles: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Article',
+        ref: 'article',
       },
     ],
   },
   {
-    timestamps: true, versionKey: false
+    timestamps: true,
+    versionKey: false,
   },
 );
 
-export default mongoose.model('user', userSchema); //Це створить колекцію users (mongoose сам додає s)
+export default mongoose.model('user', userSchema);
