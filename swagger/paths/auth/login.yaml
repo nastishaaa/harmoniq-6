@@ -3,18 +3,24 @@ post:
     - Auth
   summary: Login user
   operationId: loginUser
+  description: Login user with email and password
+  security:
+    - bearerAuth: []
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/auth.yaml#/AuthUser'
+          $ref: ../../components/schemas/auth.yaml#/AuthUser
+
   responses:
     '200':
-      description: Login successful
+      description: Successfully logged in user!
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/auth.yaml#/LoginResponse'
+            $ref: ../../components/schemas/auth.yaml#/LoginResponse
+    '400':
+      $ref: ../../components/responses/400.yaml
     '401':
-      $ref: '../../components/responses/401.yaml'
+      $ref: ../../components/responses/401.yaml

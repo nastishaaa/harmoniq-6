@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   version: 1.0.0
-  title: Harmoniq app
+  title: Harmoniq App
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -19,17 +19,16 @@ tags:
 
 servers:
   - url: http://localhost:3000
-  - url: https://example.com/api/v1
-
+  - url: https://harmoniq-6.onrender.com
 paths:
   /auth/register:
-    $ref: '../swagger/paths/auth/register.yaml'
+    $ref: ../swagger/paths/auth/register.yaml
   /auth/login:
-    $ref: '../swagger/paths/auth/login.yaml'
+    $ref: ../swagger/paths/auth/login.yaml
   /auth/logout:
-    $ref: '../swagger/paths/auth/logout.yaml'
+    $ref: ../swagger/paths/auth/logout.yaml
   /auth/refresh:
-    $ref: '../swagger/paths/auth/refresh.yaml'
+    $ref: ../swagger/paths/auth/refresh.yaml
 
   /articles:
     get:
@@ -44,7 +43,6 @@ paths:
       $ref: ../swagger/paths/articles/{articleId}/patch.yaml
     delete:
       $ref: ../swagger/paths/articles/{articleId}/delete.yaml
-
   /users/profile:
     get:
       $ref: ../swagger/paths/users/profile/get.yaml
@@ -80,6 +78,10 @@ components:
       $ref: '../swagger/components/schemas/auth.yaml#/LoginResponse'
     RefreshTokenRequest:
       $ref: '../swagger/components/schemas/auth.yaml#/RefreshTokenRequest'
+    RegisterUser:
+      $ref: '../swagger/components/schemas/auth.yaml#/RegisterUser'
+    Article:
+      $ref: '../swagger/components/schemas/articles.yaml#/Article'
 
   responses:
     '400':

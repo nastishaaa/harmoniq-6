@@ -1,28 +1,32 @@
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-import { getAllArticles, getArticleById, createArticle, patchArticle, deleteArticle } from '../services/articles.js';
+import {
+    getAllArticles,
+    getArticleById,
+    createArticle,
+    patchArticle,
+    deleteArticle,
+} from '../services/articles.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import createHttpError from 'http-errors';
 
 export const getAllArticlesController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
-        const { sort, sortOrder, sortBy } = parseSortParams(req.query);
-        const ownerId = req.user._id;
-    const articles = await getAllArticles({ page, perPage, sortOrder, sortBy, ownerId });
+    const { sortOrder, sortBy } = parseSortParams(req.query);
+    const articles = await getAllArticles({ page, perPage, sortOrder, sortBy });
 
     res.json({
-            status: 200,
-            message: 'Successfully found articles!',
-            data: articles,
-        });
+        status: 200,
+        message: 'Successfully found articles!',
+        data: articles,
+    });
 };
 
 export const getArticleByIdController = async (req, res) => {
-    const ownerId = req.user._id;
     const { articleId } = req.params;
 
-    const article = await getArticleById(articleId, ownerId);
+    const article = await getArticleById(articleId);
 
     if (!article) {
         throw createHttpError(404, 'Article not found');
@@ -36,19 +40,26 @@ export const getArticleByIdController = async (req, res) => {
 };
 
 export const createArticleController = async (req, res) => {
-    const ownerId = req.user._id;
-    const photo = req.file;
-    let photoUrl;
+    try {
+        const ownerId = req.user._id;
+        const photo = req.file;
 
-    if (photo) {
-        if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
-            photoUrl = await saveFileToCloudinary(photo);
-        } else {
+        let photoUrl;
+
+        if (photo) {
             photoUrl = await saveFileToCloudinary(photo);
         }
-    }
 
-        const article = await createArticle({ ...req.body, photo: photoUrl }, ownerId);
+        console.log('📄 Article body before saving:', {
+            ...req.body,
+            img: photoUrl,
+            ownerId,
+        });
+
+        const article = await createArticle(
+            { ...req.body, img: photoUrl },
+            ownerId,
+        );
 
         res.status(201).json({
             status: 201,
@@ -56,8 +67,16 @@ export const createArticleController = async (req, res) => {
             data: {
                 ownerId,
                 ...article.toObject(),
-            }
+            },
         });
+    } catch (error) {
+        console.error('❌ Error in createArticleController:', error);
+        res.status(500).json({
+            status: 500,
+            message: error.message || 'Something went wrong',
+            data: [],
+        });
+    }
 };
 
 export const patchArticleController = async (req, res, next) => {
@@ -75,13 +94,16 @@ export const patchArticleController = async (req, res, next) => {
         }
     }
 
-    const article = await patchArticle(articleId, ownerId, { ...req.body, photo: photoUrl });
+    const article = await patchArticle(articleId, ownerId, {
+        ...req.body,
+        photo: photoUrl,
+    });
     if (!article) {
         return next(createHttpError(404, 'Article not found!'));
     }
     res.status(200).json({
         status: 200,
-        message: "Successfully patched an article!",
+        message: 'Successfully patched an article!',
         data: article,
     });
 };

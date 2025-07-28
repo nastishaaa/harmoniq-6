@@ -1,12 +1,15 @@
 post:
   tags:
     - Auth
-  summary: Logout user
+  summary: logout user
   operationId: logoutUser
+  description: Logout the currently authenticated user by invalidating the access token.
   security:
     - bearerAuth: []
   responses:
     '204':
-      description: Logged out successfully
+      description: User successfully logged out.
+    '400':
+      $ref: ../../components/responses/400.yaml
     '401':
-      $ref: '../../components/responses/401.yaml'
+      $ref: ../../components/responses/401.yaml

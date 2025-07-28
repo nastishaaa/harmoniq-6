@@ -9,10 +9,10 @@ export const getAllArticles = async ({ page, perPage, sort,
     const limit = perPage;
     const skip = (page - 1) * perPage;
 
-    const articlesQuery = Article.find({ ownerId });
-    const articlesCount = await Article.find().merge(articlesQuery).countDocuments();
+    // const articlesQuery = Article.find({ ownerId });
+    const articlesCount = await Article.find().countDocuments();
     
-    const articles = await articlesQuery.skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec();
+    const articles = await Article.find().skip(skip).limit(limit).sort({ [sortBy]: sortOrder }).exec();
     
     const paginationData = calculatePaginationData(articlesCount, page, perPage);
 
@@ -27,8 +27,8 @@ export const getAllArticles = async ({ page, perPage, sort,
     };
 };
 
-export const getArticleById = async (articleId, ownerId) => {
-    const article = await Article.findOne({ _id: articleId, ownerId });
+export const getArticleById = async (articleId) => {
+    const article = await Article.findOne({ _id: articleId });
     return article;
 };
 

@@ -1,16 +1,16 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
-
-import { User } from '../db/models/user.js';
-import { Session } from '../db/models/session.js';
 import jwt from 'jsonwebtoken';
+import fs from 'node:fs';
+import path from 'node:path';
+import Handlebars from 'handlebars';
+
+import User from '../db/models/user.js';
+import { Session } from '../db/models/session.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendEmail.js';
 import { ENV_VARS } from '../constants/envVars.js';
-import Handlebars from 'handlebars';
-import path from 'node:path';
-import fs from 'node:fs';
 import { TEMPLATE_DIR } from '../constants/paths.js';
 
 const resetPasswordTemplate = fs
@@ -42,12 +42,12 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
+  const user = await User.findOne({ email: payload.email }).select('+password');
 
   if (!user) {
     throw createHttpError(401, 'User login and password does not match!');
   }
-
+  
   const arePasswordsEqual = await bcrypt.compare(
     payload.password,
     user.password,

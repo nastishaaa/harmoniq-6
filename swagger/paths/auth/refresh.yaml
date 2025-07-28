@@ -8,13 +8,13 @@ post:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/auth.yaml#/RefreshTokenRequest'
+          $ref: ../../components/schemas/auth.yaml#/RefreshTokenRequest
   responses:
     '200':
-      description: New tokens issued
+      description: Successfully refreshed a session!
       content:
         application/json:
           schema:
-            $ref: '../../components/schemas/auth.yaml#/LoginResponse'
+            $ref: ../../components/schemas/auth.yaml#/LoginResponse
     '401':
-      $ref: '../../components/responses/401.yaml'
+      $ref: ../../components/responses/401.yaml

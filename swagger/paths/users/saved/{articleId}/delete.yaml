@@ -2,19 +2,20 @@ tags:
   - User
 summary: Remove saved article by ID
 operationId: deleteUserSavedArticle
-description: Remove saved article by ID
+description: Remove a specific article from the list of saved articles of the current user.
 security:
   - bearerAuth: []
 parameters:
   - in: path
     name: articleId
     required: true
+    description: ID of the article to be removed from saved list
     schema:
       type: string
       example: '65ca67e7ae7f10c88b598384'
 responses:
   '204':
-    description: Article removed from saved list
+    description: Article successfully deleted. No content returned.
   '401':
     $ref: ../../../../components/responses/401.yaml
   '404':

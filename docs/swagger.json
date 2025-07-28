@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "version": "1.0.0",
-    "title": "Harmoniq app",
+    "title": "Harmoniq App",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "https://example.com/api/v1"
+      "url": "https://harmoniq-6.onrender.com"
     }
   ],
   "security": [
@@ -46,31 +46,93 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Register a new user",
+        "summary": "Register new user",
         "operationId": "registerUser",
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/AuthUser"
+                "$ref": "#/components/schemas/RegisterUser",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "User name",
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 32,
+                    "example": "Анастасія Олійник"
+                  },
+                  "email": {
+                    "description": "Email address of the user",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 64,
+                    "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+                    "example": "anastasiaoliynyk@mail.com"
+                  },
+                  "password": {
+                    "description": "Password of the user",
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8,
+                    "maxLength": 64,
+                    "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
+                    "example": "Password123"
+                  },
+                  "avatar": {
+                    "description": "Avatar of the user (max size 1MB)",
+                    "type": "string"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "User successfully registered"
+            "description": "Successfully registered a user!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully registered a user!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/FullUser"
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "$ref": "#/components/responses/400"
           },
           "409": {
-            "description": "Email already exists"
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
           }
         }
       }
-      
     },
     "/auth/login": {
       "post": {
@@ -79,6 +141,12 @@
         ],
         "summary": "Login user",
         "operationId": "loginUser",
+        "description": "Login user with email and password",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -91,7 +159,7 @@
         },
         "responses": {
           "200": {
-            "description": "Login successful",
+            "description": "Successfully logged in user!",
             "content": {
               "application/json": {
                 "schema": {
@@ -99,6 +167,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -111,8 +182,9 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Logout user",
+        "summary": "logout user",
         "operationId": "logoutUser",
+        "description": "Logout the currently authenticated user by invalidating the access token.",
         "security": [
           {
             "bearerAuth": []
@@ -120,7 +192,10 @@
         ],
         "responses": {
           "204": {
-            "description": "Logged out successfully"
+            "description": "User successfully logged out."
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -147,7 +222,7 @@
         },
         "responses": {
           "200": {
-            "description": "New tokens issued",
+            "description": "Successfully refreshed a session!",
             "content": {
               "application/json": {
                 "schema": {
@@ -619,22 +694,82 @@
         "tags": [
           "User"
         ],
-        "summary": "Get current user's profile",
-        "operationId": "getUserProfile",
-        "description": "Get current user's profile",
+        "summary": "Get current user info with personal and saved articles",
+        "operationId": "getCurrentUser",
+        "description": "Returns full information about the authenticated user, including personal and saved articles",
         "security": [
           {
             "bearerAuth": []
           }
         ],
         "responses": {
-      "200": {
-        "description": "Successfully retrieved user profile"
-      },
-      "401": {
-        "$ref": "#/components/responses/401"
-      }
-      }
+          "200": {
+            "description": "Successfully retrieved user profile with articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "_id",
+                        "name",
+                        "email",
+                        "avatar",
+                        "myArticles",
+                        "savedArticles"
+                      ],
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "65e4decdd286b30065d54af9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Анастасія Олійник"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "anastasiaoliynyk@mail.com"
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "myArticles": {
+                          "type": "array",
+                          "description": "List of articles authored by the user",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "savedArticles": {
+                          "type": "array",
+                          "description": "List of saved articles by the user",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     },
     "/users/saved": {
@@ -650,14 +785,100 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number (default is 1)"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 12
+            },
+            "description": "Number of articles per page (default is 12)"
+          }
+        ],
         "responses": {
-      "200": {
-        "description": "List of saved articles"
-      },
-      "401": {
-        "$ref": "#/components/responses/401"
-      }
-    }
+          "200": {
+            "description": "Successfully retrieved saved articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Saved articles fetched successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 12
+                        },
+                        "totalItems": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 25
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
       },
       "post": {
         "tags": [
@@ -671,16 +892,66 @@
             "bearerAuth": []
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "articleId"
+                ],
+                "properties": {
+                  "articleId": {
+                    "type": "string",
+                    "description": "ID of article to save",
+                    "example": "65ca67e7ae7f10c88b598384"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
-      "201": {
-        "description": "Article saved successfully"
-      },
-      "400": {
-        "$ref": "#/components/responses/400"
-      },
-      "401": {
-        "$ref": "#/components/responses/401"
-      }
+          "201": {
+            "description": "Successfully saved article to user list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Article successfully added to saved list"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "409": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     },
     "/users/saved/{articleId}": {
@@ -690,7 +961,7 @@
         ],
         "summary": "Remove saved article by ID",
         "operationId": "deleteUserSavedArticle",
-        "description": "Remove saved article by ID",
+        "description": "Remove a specific article from the list of saved articles of the current user.",
         "security": [
           {
             "bearerAuth": []
@@ -701,6 +972,7 @@
             "in": "path",
             "name": "articleId",
             "required": true,
+            "description": "ID of the article to be removed from saved list",
             "schema": {
               "type": "string",
               "example": "65ca67e7ae7f10c88b598384"
@@ -708,17 +980,17 @@
           }
         ],
         "responses": {
-      "204": {
-        "description": "Saved article successfully deleted"
-      },
-      "401": {
-        "$ref": "#/components/responses/400"
-      },
-      "404": {
-        "$ref": "#/components/responses/404"
+          "204": {
+            "description": "Article successfully deleted. No content returned."
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
       }
-      }
-    }
     },
     "/users/created": {
       "get": {
@@ -733,15 +1005,101 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number (default is 1)"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            },
+            "description": "Number of articles per page (default is 10)"
+          }
+        ],
         "responses": {
-      "200": {
-        "description": "List of created articles"
-      },
-      "401": {
-        "$ref": "#/components/responses/401"
+          "200": {
+            "description": "Successfully retrieved user's articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User's articles fetched successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 18
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
-      }
-    }
     },
     "/categories": {
       "get": {
@@ -757,14 +1115,16 @@
           }
         ],
         "responses": {
-      "200": {
-        "description": "List of available categories"
-      }
+          "200": {
+            "description": "List of categories"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     }
   },
-  
-
   "components": {
     "securitySchemes": {
       "bearerAuth": {
@@ -776,28 +1136,33 @@
       "AuthUser": {
         "type": "object",
         "required": [
-          "name",
           "email",
           "password"
         ],
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "John Doe"
-          },
           "email": {
             "type": "string",
             "format": "email",
+            "maxLength": 64,
+            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
             "example": "user@example.com"
           },
           "password": {
             "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "maxLength": 64,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
             "example": "Password123"
           }
         }
       },
       "LoginResponse": {
         "type": "object",
+        "required": [
+          "token",
+          "refreshToken"
+        ],
         "properties": {
           "token": {
             "type": "string",
@@ -821,7 +1186,43 @@
           }
         }
       },
-      "articles": {
+      "RegisterUser": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 32,
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 64,
+            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "maxLength": 64,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
+            "example": "Password123"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary",
+            "description": "Avatar of the user (max size 1MB)"
+          }
+        }
+      },
+      "Article": {
         "type": "object",
         "required": [
           "_id",
@@ -890,6 +1291,121 @@
             "minLength": 4,
             "maxLength": 50,
             "example": "Анастасія Олійник"
+          }
+        }
+      },
+      "FullUser": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "email",
+          "password",
+          "avatar"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "65e4decdd286b30065d54af9"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 32,
+            "example": "Анастасія Олійник"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 64,
+            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+            "example": "anastasiaoliynyk@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "minLength": 8,
+            "maxLength": 64,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
+            "example": "Password123"
+          },
+          "avatar": {
+            "type": "string",
+            "description": "Avatar of the user (max size 1MB)"
+          }
+        }
+      },
+      "articles": {
+        "Article": {
+          "type": "object",
+          "required": [
+            "_id",
+            "title",
+            "desc",
+            "article",
+            "rate",
+            "img",
+            "ownerId",
+            "authorName",
+            "date"
+          ],
+          "properties": {
+            "_id": {
+              "description": "Article id",
+              "type": "string",
+              "example": "68498236a100312bea078fe6"
+            },
+            "title": {
+              "description": "Article title",
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 48,
+              "example": "Коли тривога заповнює простір: шлях до спокою"
+            },
+            "desc": {
+              "description": "Article short description",
+              "type": "string",
+              "minLength": 100,
+              "maxLength": 4000,
+              "example": "Медитації, які допомагають відновити внутрішній спокій"
+            },
+            "article": {
+              "description": "Full article content",
+              "type": "string",
+              "example": "У кожного з нас бувають моменти, коли тривога наче туман огортає думки…"
+            },
+            "rate": {
+              "description": "Article rating",
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "example": 16
+            },
+            "ownerId": {
+              "description": "Article author's user ID",
+              "type": "string",
+              "example": "68498236a100312bea078fe6"
+            },
+            "img": {
+              "description": "Image URL",
+              "format": "binary",
+              "type": "string",
+              "example": "https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg"
+            },
+            "date": {
+              "description": "Article creation date (YYYY-MM-DD)",
+              "type": "string",
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "example": "2025-03-27"
+            },
+            "authorName": {
+              "description": "Author's full name",
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 50,
+              "example": "Анастасія Олійник"
+            }
           }
         }
       }
@@ -1004,11 +1520,64 @@
             }
           }
         }
+      },
+      "409": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 409
+                },
+                "message": {
+                  "type": "string",
+                  "example": "ConflictError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Conflict"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "413": {
+        "description": "Avatar file is too large (max size 1MB)",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 413
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Avatar file too large"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
 }
-
-  
-
-  
