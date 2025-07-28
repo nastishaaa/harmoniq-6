@@ -43,20 +43,20 @@ paths:
   /auth/register:
     post:
       $ref: ../swagger/paths/auth/register/register.yaml
-  /users/profile:
+  /users/me:
     get:
-      $ref: ../swagger/paths/users/profile/get.yaml
-  /users/saved:
+      $ref: ../swagger/paths/users/me/get.yaml
+  /users/me/saved-articles:
     get:
-      $ref: ../swagger/paths/users/saved/get.yaml
-    post:
-      $ref: ../swagger/paths/users/saved/post.yaml
-  /users/saved/{articleId}:
+      $ref: ../swagger/paths/users/me/saved-articles/get.yaml
+  /users/me/saved-articles/{articleId}:
     delete:
-      $ref: ../swagger/paths/users/saved/{articleId}/delete.yaml
-  /users/created:
+      $ref: ../swagger/paths/users/me/saved-articles/{articleId}/delete.yaml
+    post:
+      $ref: ../swagger/paths/users/me/saved-articles/{articleId}/post.yaml
+  /users/me/created-articles:
     get:
-      $ref: ../swagger/paths/users/created/get.yaml
+      $ref: ../swagger/paths/users/me/created-articles/get.yaml
   /categories:
     get:
       $ref: ../swagger/paths/categories/get.yaml

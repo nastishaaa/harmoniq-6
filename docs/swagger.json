@@ -763,7 +763,7 @@
         }
       }
     },
-    "/users/profile": {
+    "/users/me": {
       "get": {
         "tags": [
           "User"
@@ -846,7 +846,7 @@
         }
       }
     },
-    "/users/saved": {
+    "/users/me/saved-articles": {
       "get": {
         "tags": [
           "User"
@@ -953,120 +953,110 @@
             "$ref": "#/components/responses/404"
           }
         }
+      }
+    },
+    "/users/me/saved-articles/{articleId}": {
+  "delete": {
+    "tags": [
+      "User"
+    ],
+    "summary": "Remove saved article by ID",
+    "operationId": "deleteUserSavedArticle",
+    "description": "Remove a specific article from the list of saved articles of the current user.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "articleId",
+        "required": true,
+        "description": "ID of the article to be removed from saved list",
+        "schema": {
+          "type": "string",
+          "example": "65ca67e7ae7f10c88b598384"
+        }
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "Article successfully deleted. No content returned."
       },
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Save an article to user's saved list",
-        "operationId": "saveArticleToUser",
-        "description": "Save an article to user's saved list",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "articleId"
-                ],
-                "properties": {
-                  "articleId": {
-                    "type": "string",
-                    "description": "ID of article to save",
-                    "example": "65ca67e7ae7f10c88b598384"
-                  }
-                }
-              }
-            }
-          }
+      "401": {
+        "$ref": "#/components/responses/401"
+      },
+      "404": {
+        "$ref": "#/components/responses/404"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "User"
+    ],
+    "summary": "Save an article to user's saved list",
+    "operationId": "addSavedArticleToUser",
+    "description": "Save an article to user's saved list",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "articleId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
         },
-        "responses": {
-          "201": {
-            "description": "Successfully saved article to user list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Article successfully added to saved list"
-                    },
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/articles"
-                    }
-                  }
+        "description": "ID of article to save"
+      }
+    ],
+    "responses": {
+      "201": {
+        "description": "Successfully saved article to user list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Article successfully added to saved list"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/articles"
                 }
               }
             }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "409": {
-            "$ref": "#/components/responses/401"
           }
         }
+      },
+      "400": {
+        "$ref": "#/components/responses/400"
+      },
+      "401": {
+        "$ref": "#/components/responses/401"
+      },
+      "409": {
+        "$ref": "#/components/responses/409"
       }
-    },
-    "/users/saved/{articleId}": {
-      "delete": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Remove saved article by ID",
-        "operationId": "deleteUserSavedArticle",
-        "description": "Remove a specific article from the list of saved articles of the current user.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "articleId",
-            "required": true,
-            "description": "ID of the article to be removed from saved list",
-            "schema": {
-              "type": "string",
-              "example": "65ca67e7ae7f10c88b598384"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Article successfully deleted. No content returned."
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          }
-        }
-      }
-    },
-    "/users/created": {
+    }
+  }
+},
+    "/users/me/created-articles": {
       "get": {
         "tags": [
           "User"
@@ -1488,4 +1478,4 @@
       }
     }
   }
-}
+  }
