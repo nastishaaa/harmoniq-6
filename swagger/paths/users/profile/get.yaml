@@ -1,7 +1,55 @@
 tags:
   - User
-summary: Get current user's profile
-operationId: getUserProfile
-description: Get current user's profile
+summary: Get current user info with personal and saved articles
+operationId: getCurrentUser
+description: Returns full information about the authenticated user, including personal and saved articles
 security:
   - bearerAuth: []
+responses:
+  '200':
+    description: Successfully retrieved user profile with articles
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            data:
+              type: object
+              required:
+                - _id
+                - name
+                - email
+                - avatar
+                - myArticles
+                - savedArticles
+              properties:
+                _id:
+                  type: string
+                  example: '65e4decdd286b30065d54af9'
+                name:
+                  type: string
+                  example: 'Анастасія Олійник'
+                email:
+                  type: string
+                  example: 'anastasiaoliynyk@mail.com'
+                avatar:
+                  type: string
+                  format: uri
+                myArticles:
+                  type: array
+                  description: List of articles authored by the user
+                  items:
+                    $ref: '../../../components/schemas/articles.yaml'
+                savedArticles:
+                  type: array
+                  description: List of saved articles by the user
+                  items:
+                    $ref: '../../../components/schemas/articles.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
