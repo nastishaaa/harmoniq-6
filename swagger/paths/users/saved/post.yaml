@@ -1,0 +1,14 @@
+tags:
+  - User
+summary: Save an article to user's saved list
+operationId: saveArticleToUser
+description: Save an article to user's saved list
+security:
+  - bearerAuth: []
+responses:
+  '201':
+    description: Article saved
+  '400':
+    $ref: ../../../components/responses/400.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml

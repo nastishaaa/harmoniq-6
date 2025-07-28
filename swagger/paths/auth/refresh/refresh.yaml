@@ -1,0 +1,12 @@
+tags:
+  - Auth
+summary: Refresh access token
+operationId: refreshToken
+description: Get a new access token using refresh token from cookie
+security:
+  - bearerAuth: []
+responses:
+  '201':
+    description: New tokens issued
+  '400':
+    $ref: '../../components/responses/401.yaml'

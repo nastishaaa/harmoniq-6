@@ -16,7 +16,7 @@ const articleSchema = new mongoose.Schema({
     },
     article: {
         type: String,
-        required: false,
+        required: true,
     },
     rate: {
         type: Number,
@@ -24,6 +24,10 @@ const articleSchema = new mongoose.Schema({
     img: {
         type: String,
         default: null,
+    },
+    date: {
+        type: Date,
+        default: Date.now,
     },
 
 }, {

@@ -1,0 +1,12 @@
+tags:
+  - Auth
+summary: Register new user
+operationId: registerUser
+description: Register a new user with email and password
+security:
+  - bearerAuth: []
+responses:
+  '201':
+    description: Successfully registered
+  '400':
+    $ref: '../../components/responses/400.yaml'

@@ -1,5 +1,5 @@
- description: Bad request error
- content:
+description: Not found
+content:
   application/json:
     schema:
       type: object
@@ -10,10 +10,10 @@
       properties:
         status:
           type: integer
-          example: 400
+          example: 404
         message:
           type: string
-          example: BadRequest
+          example: NotFoundError
         data:
           type: object
           required:
@@ -21,3 +21,4 @@
           properties:
             message:
               type: string
+              example: Not found
