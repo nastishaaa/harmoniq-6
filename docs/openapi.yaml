@@ -16,7 +16,6 @@ tags:
     description: Managing articles
   - name: Categories
     description: Article categories
-
 servers:
   - url: http://localhost:3000
   - url: https://harmoniq-6.onrender.com
@@ -64,7 +63,6 @@ paths:
   /categories:
     get:
       $ref: ../swagger/paths/categories/get.yaml
-
 components:
   securitySchemes:
     bearerAuth:

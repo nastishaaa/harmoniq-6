@@ -1,5 +1,5 @@
- description: Bad request error
- content:
+description: Bad request error
+content:
   application/json:
     schema:
       type: object
