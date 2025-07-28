@@ -768,14 +768,82 @@
         "tags": [
           "User"
         ],
-        "summary": "Get current user's profile",
-        "operationId": "getUserProfile",
-        "description": "Get current user's profile",
+        "summary": "Get current user info with personal and saved articles",
+        "operationId": "getCurrentUser",
+        "description": "Returns full information about the authenticated user, including personal and saved articles",
         "security": [
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user profile with articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "_id",
+                        "name",
+                        "email",
+                        "avatar",
+                        "myArticles",
+                        "savedArticles"
+                      ],
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "65e4decdd286b30065d54af9"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Анастасія Олійник"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "anastasiaoliynyk@mail.com"
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "myArticles": {
+                          "type": "array",
+                          "description": "List of articles authored by the user",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "savedArticles": {
+                          "type": "array",
+                          "description": "List of saved articles by the user",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     },
     "/users/saved": {
@@ -790,7 +858,101 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number (default is 1)"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 12
+            },
+            "description": "Number of articles per page (default is 12)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved saved articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Saved articles fetched successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 12
+                        },
+                        "totalItems": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 25
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
       },
       "post": {
         "tags": [
@@ -803,7 +965,67 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "articleId"
+                ],
+                "properties": {
+                  "articleId": {
+                    "type": "string",
+                    "description": "ID of article to save",
+                    "example": "65ca67e7ae7f10c88b598384"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully saved article to user list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Article successfully added to saved list"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "409": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     },
     "/users/saved/{articleId}": {
@@ -813,7 +1035,7 @@
         ],
         "summary": "Remove saved article by ID",
         "operationId": "deleteUserSavedArticle",
-        "description": "Remove saved article by ID",
+        "description": "Remove a specific article from the list of saved articles of the current user.",
         "security": [
           {
             "bearerAuth": []
@@ -824,12 +1046,24 @@
             "in": "path",
             "name": "articleId",
             "required": true,
+            "description": "ID of the article to be removed from saved list",
             "schema": {
               "type": "string",
               "example": "65ca67e7ae7f10c88b598384"
             }
           }
-        ]
+        ],
+        "responses": {
+          "204": {
+            "description": "Article successfully deleted. No content returned."
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
       }
     },
     "/users/created": {
@@ -844,7 +1078,101 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number (default is 1)"
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            },
+            "description": "Number of articles per page (default is 10)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved user's articles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User's articles fetched successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/articles"
+                          }
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 18
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     },
     "/categories": {
