@@ -30,3 +30,12 @@ export const removeSavedArticle = async (req, res) => {
   );
   res.status(200).json(updatedUser.savedArticles);
 };
+
+export const getAllAuthors = async (req, res) => {
+  const authors = await userService.getAllAuthors();
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully fetched all authors!',
+    data: authors,
+  });
+};

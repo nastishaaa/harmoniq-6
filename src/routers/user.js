@@ -5,11 +5,12 @@ import {
   getCreatedArticles,
   addSavedArticle,
   removeSavedArticle,
+  getAllAuthors,
 } from '../controllers/user.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
-
+router.get('/authors', getAllAuthors);
 router.use(authenticate);
 
 router.get('/me', getCurrentUser);

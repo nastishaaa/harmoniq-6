@@ -38,3 +38,7 @@ export const removeSavedArticle = async (userId, articleId) => {
   user.savedArticles.pull(articleId);
   return await user.save();
 };
+
+export const getAllAuthors = async () => {
+  return await User.find({}, 'name avatarUrl');
+};
