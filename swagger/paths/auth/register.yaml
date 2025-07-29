@@ -1,0 +1,67 @@
+post:
+  tags:
+    - Auth
+  summary: Register new user
+  operationId: registerUser
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: '../../components/schemas/auth.yaml#/RegisterUser'
+          required:
+            - name
+            - email
+            - password
+          properties:
+            name:
+              description: User name
+              type: string
+              minLength: 2
+              maxLength: 32
+              example: 'Анастасія Олійник'
+            email:
+              description: Email address of the user
+              type: string
+              format: email
+              maxLength: 64
+              pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+              example: 'anastasiaoliynyk@mail.com'
+            password:
+              description: Password of the user
+              type: string
+              format: password
+              minLength: 8
+              maxLength: 64
+              pattern: ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$
+              example: 'Password123'
+            avatar:
+              description: Avatar of the user (max size 1MB)
+              type: string
+
+  responses:
+    '201':
+      description: Successfully registered a user!
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+              - message
+              - data
+            properties:
+              status:
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: Successfully registered a user!
+              data:
+                $ref: ../../components/schemas/auth.yaml#/FullUser
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '409':
+      $ref: ../../components/responses/409.yaml
+    '413':
+      $ref: ../../components/responses/413.yaml
