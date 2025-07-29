@@ -67,3 +67,26 @@ export const getArticlesByAuthorId = async (id, page = 1, perPage = 12) => {
     },
   };
 };
+
+export const updateCurrentUser = async (userId, updateData) => {
+  const allowedFields = ['name', 'avatarUrl'];
+  const filteredData = {};
+
+  for (const key of allowedFields) {
+    if (updateData[key] !== undefined) {
+      filteredData[key] = updateData[key];
+    }
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, filteredData, {
+    new: true,
+    runValidators: true,
+    select: '-password',
+  });
+
+  if (!updatedUser) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  return updatedUser;
+};

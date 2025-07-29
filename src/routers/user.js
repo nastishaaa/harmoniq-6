@@ -1,6 +1,9 @@
 import express from 'express';
+import { validateBody } from '../middlewares/validateBody.js';
+import { userUpdateSchema } from '../validation/userUpdate.js';
 import {
   getCurrentUser,
+  updateCurrentUser,
   getSavedArticles,
   getCreatedArticles,
   addSavedArticle,
@@ -18,6 +21,7 @@ router.get('/authors/:id/articles', getArticlesByAuthorId);
 router.use(authenticate);
 
 router.get('/me', getCurrentUser);
+router.patch('/me', validateBody(userUpdateSchema), updateCurrentUser);
 router.get('/me/saved-articles', getSavedArticles);
 router.get('/me/created-articles', getCreatedArticles);
 router.post('/me/saved-articles/:articleId', addSavedArticle);
