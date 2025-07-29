@@ -4,7 +4,6 @@ Article:
     - _id
     - title
     - desc
-    - article
     - rate
     - img
     - ownerId
@@ -22,15 +21,11 @@ Article:
       maxLength: 48
       example: 'Коли тривога заповнює простір: шлях до спокою'
     desc:
-      description: Article short description
+      description: Full article text
       type: string
       minLength: 100
       maxLength: 4000
       example: 'Медитації, які допомагають відновити внутрішній спокій'
-    article:
-      description: Full article content
-      type: string
-      example: 'У кожного з нас бувають моменти, коли тривога наче туман огортає думки…'
     rate:
       description: Article rating
       type: number
