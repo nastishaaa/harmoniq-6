@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   version: 1.0.0
   title: Harmoniq App
@@ -6,6 +6,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: API for articles, authentication, and user management
+
 tags:
   - name: Auth
     description: Auth operations.
@@ -19,11 +20,21 @@ servers:
   - url: http://localhost:3000
   - url: https://harmoniq-6.onrender.com
 paths:
+  /auth/register:
+    $ref: ../swagger/paths/auth/register.yaml
+  /auth/login:
+    $ref: ../swagger/paths/auth/login.yaml
+  /auth/logout:
+    $ref: ../swagger/paths/auth/logout.yaml
+  /auth/refresh:
+    $ref: ../swagger/paths/auth/refresh.yaml
+
   /articles:
     get:
       $ref: ../swagger/paths/articles/get.yaml
     post:
       $ref: ../swagger/paths/articles/post.yaml
+
   /articles/{articleId}:
     get:
       $ref: ../swagger/paths/articles/{articleId}/get.yaml
@@ -31,32 +42,24 @@ paths:
       $ref: ../swagger/paths/articles/{articleId}/patch.yaml
     delete:
       $ref: ../swagger/paths/articles/{articleId}/delete.yaml
-  /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login/login.yaml
-  /auth/logout:
-    post:
-      $ref: ../swagger/paths/auth/logout/logout.yaml
-  /auth/refresh:
-    post:
-      $ref: ../swagger/paths/auth/refresh/refresh.yaml
-  /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register/register.yaml
   /users/profile:
     get:
       $ref: ../swagger/paths/users/profile/get.yaml
+
   /users/saved:
     get:
       $ref: ../swagger/paths/users/saved/get.yaml
     post:
       $ref: ../swagger/paths/users/saved/post.yaml
+
   /users/saved/{articleId}:
     delete:
       $ref: ../swagger/paths/users/saved/{articleId}/delete.yaml
+
   /users/created:
     get:
       $ref: ../swagger/paths/users/created/get.yaml
+
   /categories:
     get:
       $ref: ../swagger/paths/categories/get.yaml
@@ -65,3 +68,24 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+
+  schemas:
+    AuthUser:
+      $ref: '../swagger/components/schemas/auth.yaml#/AuthUser'
+    LoginResponse:
+      $ref: '../swagger/components/schemas/auth.yaml#/LoginResponse'
+    RefreshTokenRequest:
+      $ref: '../swagger/components/schemas/auth.yaml#/RefreshTokenRequest'
+    RegisterUser:
+      $ref: '../swagger/components/schemas/auth.yaml#/RegisterUser'
+    Article:
+      $ref: '../swagger/components/schemas/articles.yaml#/Article'
+
+  responses:
+    '400':
+      $ref: '../swagger/components/responses/400.yaml'
+    '401':
+      $ref: '../swagger/components/responses/401.yaml'
+
+security:
+  - bearerAuth: []

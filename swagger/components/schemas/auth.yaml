@@ -1,36 +1,109 @@
-type: object
-required:
-  - _id
-  - name
-  - email
-  - password
-  - avatar
-properties:
-  _id:
-    description: User id
-    type: string
-    example: 65e4decdd286b30065d54af9
-  name:
-    description: User name
-    type: string
-    minLength: 2
-    maxLength: 32
-    example: 'Анастасія Олійник'
-  email:
-    description: Email address of the user
-    type: string
-    format: email
-    maxLength: 64
-    pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
-    example: 'anastasiaoliynyk@mail.com'
-  password:
-    description: Password of the user
-    type: string
-    format: password
-    minLength: 8
-    maxLength: 64
-    pattern: ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$
-    example: 'Password123'
-  avatar:
-    description: Avatar of the user (max size 1MB)
-    type: string
+# Для логіну
+AuthUser:
+  type: object
+  required:
+    - email
+    - password
+  properties:
+    email:
+      type: string
+      format: email
+      maxLength: 64
+      pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+      example: 'user@example.com'
+    password:
+      type: string
+      format: password
+      minLength: 8
+      maxLength: 64
+      pattern: ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$
+      example: Password123
+
+# Для реєстрації
+RegisterUser:
+  type: object
+  required:
+    - name
+    - email
+    - password
+  properties:
+    name:
+      type: string
+      minLength: 2
+      maxLength: 32
+      example: 'John Doe'
+    email:
+      type: string
+      format: email
+      maxLength: 64
+      pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+      example: 'user@example.com'
+    password:
+      type: string
+      format: password
+      minLength: 8
+      maxLength: 64
+      pattern: ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$
+      example: Password123
+    avatar:
+      type: string
+      format: binary
+      description: Avatar of the user (max size 1MB)
+# Для відповіді при логіні
+LoginResponse:
+  type: object
+  required:
+    - token
+    - refreshToken
+  properties:
+    token:
+      type: string
+      description: JWT access token
+    refreshToken:
+      type: string
+      description: JWT refresh token
+
+# Для refresh запиту
+RefreshTokenRequest:
+  type: object
+  required:
+    - refreshToken
+  properties:
+    refreshToken:
+      type: string
+      example: your_refresh_token_here
+
+# Повна інформація про юзера (може бути у відповіді)
+FullUser:
+  type: object
+  required:
+    - _id
+    - name
+    - email
+    - password
+    - avatar
+  properties:
+    _id:
+      type: string
+      example: 65e4decdd286b30065d54af9
+    name:
+      type: string
+      minLength: 2
+      maxLength: 32
+      example: 'Анастасія Олійник'
+    email:
+      type: string
+      format: email
+      maxLength: 64
+      pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+      example: 'anastasiaoliynyk@mail.com'
+    password:
+      type: string
+      format: password
+      minLength: 8
+      maxLength: 64
+      pattern: ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$
+      example: 'Password123'
+    avatar:
+      type: string
+      description: Avatar of the user (max size 1MB)

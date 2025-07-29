@@ -1,0 +1,44 @@
+tags:
+  - Users
+summary: Get all authors
+description: Returns a list of all authors with their name and avatar.
+operationId: getAllAuthors
+responses:
+  '200':
+    description: Successfully fetched all authors
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully fetched all authors!
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Анастасія Олійник
+                  avatarUrl:
+                    type: string
+                    format: uri
+                    example: https://example.com/uploads/avatar1.jpg
+  '500':
+    description: Server error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 500
+            message:
+              type: string
+              example: Internal Server Error

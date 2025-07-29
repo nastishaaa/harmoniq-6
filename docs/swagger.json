@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
     "version": "1.0.0",
     "title": "Harmoniq App",
@@ -15,6 +15,11 @@
     },
     {
       "url": "https://harmoniq-6.onrender.com"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
     }
   ],
   "tags": [
@@ -36,6 +41,202 @@
     }
   ],
   "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register new user",
+        "operationId": "registerUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "description": "User name",
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 32,
+                    "example": "Анастасія Олійник"
+                  },
+                  "email": {
+                    "description": "Email address of the user",
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 64,
+                    "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+                    "example": "anastasiaoliynyk@mail.com"
+                  },
+                  "password": {
+                    "description": "Password of the user",
+                    "type": "string",
+                    "format": "password",
+                    "minLength": 8,
+                    "maxLength": 64,
+                    "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
+                    "example": "Password123"
+                  },
+                  "avatar": {
+                    "description": "Avatar of the user (max size 1MB)",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully registered a user!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully registered a user!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/FullUser"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "413": {
+            "$ref": "#/components/responses/413"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login user",
+        "operationId": "loginUser",
+        "description": "Login user with email and password",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in user!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "logout user",
+        "operationId": "logoutUser",
+        "description": "Logout the currently authenticated user by invalidating the access token.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User successfully logged out."
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh tokens",
+        "operationId": "refreshToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully refreshed a session!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
     "/articles": {
       "get": {
         "tags": [
@@ -127,7 +328,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/articles"
+                            "$ref": "#/components/schemas/Article"
                           }
                         },
                         "page": {
@@ -259,7 +460,7 @@
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/articles"
+                      "$ref": "#/components/schemas/Article"
                     }
                   }
                 }
@@ -322,7 +523,7 @@
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/articles"
+                      "$ref": "#/components/schemas/Article"
                     }
                   }
                 }
@@ -433,7 +634,7 @@
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/articles"
+                      "$ref": "#/components/schemas/Article"
                     }
                   }
                 }
@@ -488,282 +689,77 @@
         }
       }
     },
-    "/auth/login": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Login user",
-        "operationId": "loginUser",
-        "description": "Login user with email and password",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "email": {
-                    "description": "Email address of the user",
-                    "type": "string",
-                    "format": "email",
-                    "maxLength": 64,
-                    "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
-                    "example": "anastasiaoliynyk@mail.com"
-                  },
-                  "password": {
-                    "description": "Password of the user",
-                    "type": "string",
-                    "format": "password",
-                    "minLength": 8,
-                    "maxLength": 64,
-                    "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
-                    "example": "Password123"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully logged in an user!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully logged in an user!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "accessToken"
-                      ],
-                      "properties": {
-                        "accessToken": {
-                          "type": "string",
-                          "example": "v4ZILl3+mLqnnwtNqQmpf/Lrey4s+D2DUFBNPcKF"
-                        }
+  "/users/authors": {
+  "get": {
+    "tags": ["User"],
+    "summary": "Get all authors",
+    "operationId": "getAllAuthors",
+    "description": "Returns a list of all authors with their name and avatar URL",
+    "responses": {
+      "200": {
+        "description": "Successfully fetched all authors",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["status", "message", "data"],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Successfully fetched all authors!"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "avatarUrl"],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Анастасія Олійник"
+                      },
+                      "avatarUrl": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://example.com/uploads/avatar1.jpg"
                       }
                     }
                   }
                 }
               }
             }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
           }
         }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "logout user",
-        "operationId": "logoutUser",
-        "description": "Logout the currently authenticated user by invalidating the access token.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "User successfully logged out."
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          }
-        }
-      }
-    },
-    "/auth/refresh": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Refresh access token",
-        "operationId": "refreshToken",
-        "description": "Get a new access token using refresh token from cookie",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully refreshed a session!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully refreshed a session!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "accessToken"
-                      ],
-                      "properties": {
-                        "accessToken": {
-                          "type": "string",
-                          "example": "v4ZILl3+mLqnnwtNqQmpf/Lrey4s+D2DUFBNPcKF"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          }
-        }
-      }
-    },
-    "/auth/register": {
-      "post": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Register new user",
-        "operationId": "registerUser",
-        "description": "Register a new user with name, email, password, and optional avatar",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "name": {
-                    "description": "User name",
-                    "type": "string",
-                    "minLength": 2,
-                    "maxLength": 32,
-                    "example": "Анастасія Олійник"
-                  },
-                  "email": {
-                    "description": "Email address of the user",
-                    "type": "string",
-                    "format": "email",
-                    "maxLength": 64,
-                    "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
-                    "example": "anastasiaoliynyk@mail.com"
-                  },
-                  "password": {
-                    "description": "Password of the user",
-                    "type": "string",
-                    "format": "password",
-                    "minLength": 8,
-                    "maxLength": 64,
-                    "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
-                    "example": "Password123"
-                  },
-                  "avatar": {
-                    "description": "Avatar of the user (max size 1MB)",
-                    "type": "string"
-                  }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["status", "message"],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal Server Error"
                 }
               }
             }
           }
-        },
-        "responses": {
-          "201": {
-            "description": "Successfully registered a user!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully registered a user!"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/auth"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "409": {
-            "$ref": "#/components/responses/409"
-          },
-          "413": {
-            "$ref": "#/components/responses/413"
-          }
         }
       }
-    },
-    "/users/profile": {
+    }
+  }
+},
+    "/users/me": {
       "get": {
         "tags": [
           "User"
@@ -823,14 +819,14 @@
                           "type": "array",
                           "description": "List of articles authored by the user",
                           "items": {
-                            "$ref": "#/components/schemas/articles"
+                            "$ref": "#/components/schemas/Article"
                           }
                         },
                         "savedArticles": {
                           "type": "array",
                           "description": "List of saved articles by the user",
                           "items": {
-                            "$ref": "#/components/schemas/articles"
+                            "$ref": "#/components/schemas/Article"
                           }
                         }
                       }
@@ -846,7 +842,7 @@
         }
       }
     },
-    "/users/saved": {
+    "/users/me/saved-articles": {
       "get": {
         "tags": [
           "User"
@@ -915,7 +911,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/articles"
+                            "$ref": "#/components/schemas/Article"
                           }
                         },
                         "page": {
@@ -953,120 +949,110 @@
             "$ref": "#/components/responses/404"
           }
         }
+      }
+    },
+    "/users/me/saved-articles/{articleId}": {
+  "delete": {
+    "tags": [
+      "User"
+    ],
+    "summary": "Remove saved article by ID",
+    "operationId": "deleteUserSavedArticle",
+    "description": "Remove a specific article from the list of saved articles of the current user.",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "path",
+        "name": "articleId",
+        "required": true,
+        "description": "ID of the article to be removed from saved list",
+        "schema": {
+          "type": "string",
+          "example": "65ca67e7ae7f10c88b598384"
+        }
+      }
+    ],
+    "responses": {
+      "204": {
+        "description": "Article successfully deleted. No content returned."
       },
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Save an article to user's saved list",
-        "operationId": "saveArticleToUser",
-        "description": "Save an article to user's saved list",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "articleId"
-                ],
-                "properties": {
-                  "articleId": {
-                    "type": "string",
-                    "description": "ID of article to save",
-                    "example": "65ca67e7ae7f10c88b598384"
-                  }
-                }
-              }
-            }
-          }
+      "401": {
+        "$ref": "#/components/responses/401"
+      },
+      "404": {
+        "$ref": "#/components/responses/404"
+      }
+    }
+  },
+  "post": {
+    "tags": [
+      "User"
+    ],
+    "summary": "Save an article to user's saved list",
+    "operationId": "addSavedArticleToUser",
+    "description": "Save an article to user's saved list",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parameters": [
+      {
+        "name": "articleId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
         },
-        "responses": {
-          "201": {
-            "description": "Successfully saved article to user list",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Article successfully added to saved list"
-                    },
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/articles"
-                    }
-                  }
+        "description": "ID of article to save"
+      }
+    ],
+    "responses": {
+      "201": {
+        "description": "Successfully saved article to user list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Article successfully added to saved list"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/Article"
                 }
               }
             }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "409": {
-            "$ref": "#/components/responses/401"
           }
         }
+      },
+      "400": {
+        "$ref": "#/components/responses/400"
+      },
+      "401": {
+        "$ref": "#/components/responses/401"
+      },
+      "409": {
+        "$ref": "#/components/responses/409"
       }
-    },
-    "/users/saved/{articleId}": {
-      "delete": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Remove saved article by ID",
-        "operationId": "deleteUserSavedArticle",
-        "description": "Remove a specific article from the list of saved articles of the current user.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "articleId",
-            "required": true,
-            "description": "ID of the article to be removed from saved list",
-            "schema": {
-              "type": "string",
-              "example": "65ca67e7ae7f10c88b598384"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Article successfully deleted. No content returned."
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          }
-        }
-      }
-    },
-    "/users/created": {
+    }
+  }
+},
+    "/users/me/created-articles": {
       "get": {
         "tags": [
           "User"
@@ -1135,7 +1121,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/articles"
+                            "$ref": "#/components/schemas/Article"
                           }
                         },
                         "page": {
@@ -1187,136 +1173,241 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
       }
     }
   },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+"components": {
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer"
+    }
+  },
+  "schemas": {
+    "FullUser": {
+  "type": "object",
+  "required": [
+    "name",
+    "email",
+    "password"
+  ],
+  "properties": {
+    "_id": {
+      "type": "string",
+      "description": "Унікальний ідентифікатор користувача",
+      "example": "65e4decdd286b30065d54af9"
+    },
+    "name": {
+      "type": "string",
+      "description": "Ім'я користувача",
+      "minLength": 2,
+      "maxLength": 32,
+      "example": "Анастасія Олійник"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email користувача",
+      "format": "email",
+      "maxLength": 64,
+      "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+      "example": "anastasiaoliynyk@mail.com"
+    },
+    "password": {
+      "type": "string",
+      "description": "Хешований пароль (у відповіді не має передаватися, але тут для прикладу)",
+      "minLength": 8,
+      "maxLength": 64,
+      "example": "Password123"
+    },
+    "avatarUrl": {
+      "type": "string",
+      "description": "URL аватара користувача",
+      "example": "https://example.com/avatars/65e4decdd286b30065d54af9.jpg"
+    },
+    "articlesAmount": {
+      "type": "integer",
+      "description": "Кількість створених статей користувачем",
+      "default": 0,
+      "example": 5
+    },
+    "savedArticles": {
+      "type": "array",
+      "description": "Масив ID збережених статей користувача",
+      "items": {
+        "type": "string",
+        "example": "68498236a100312bea078fe6"
       }
     },
-    "schemas": {
-      "articles": {
-        "type": "object",
-        "required": [
-          "_id",
-          "title",
-          "desc",
-          "article",
-          "rate",
-          "img",
-          "ownerId",
-          "authorName",
-          "date"
-        ],
-        "properties": {
-          "_id": {
-            "description": "Article id",
-            "type": "string",
-            "example": "68498236a100312bea078fe6"
-          },
-          "title": {
-            "description": "Article title",
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 48,
-            "example": "Коли тривога заповнює простір: шлях до спокою"
-          },
-          "desc": {
-            "description": "Article short description",
-            "type": "string",
-            "minLength": 100,
-            "maxLength": 4000,
-            "example": "Медитації, які допомагають відновити внутрішній спокій"
-          },
-          "article": {
-            "description": "Full article content",
-            "type": "string",
-            "example": "У кожного з нас бувають моменти, коли тривога наче туман огортає думки…"
-          },
-          "rate": {
-            "description": "Article rating",
-            "type": "number",
-            "minimum": 0,
-            "maximum": 100,
-            "example": 16
-          },
-          "ownerId": {
-            "description": "Article author's user ID",
-            "type": "string",
-            "example": "68498236a100312bea078fe6"
-          },
-          "img": {
-            "description": "Image URL",
-            "format": "binary",
-            "type": "string",
-            "example": "https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg"
-          },
-          "date": {
-            "description": "Article creation date (YYYY-MM-DD)",
-            "type": "string",
-            "format": "date",
-            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
-            "example": "2025-03-27"
-          },
-          "authorName": {
-            "description": "Author's full name",
-            "type": "string",
-            "minLength": 4,
-            "maxLength": 50,
-            "example": "Анастасія Олійник"
-          }
-        }
-      },
-      "auth": {
-        "type": "object",
-        "required": [
-          "_id",
-          "name",
-          "email",
-          "password",
-          "avatar"
-        ],
-        "properties": {
-          "_id": {
-            "description": "User id",
-            "type": "string",
-            "example": "65e4decdd286b30065d54af9"
-          },
-          "name": {
-            "description": "User name",
-            "type": "string",
-            "minLength": 2,
-            "maxLength": 32,
-            "example": "Анастасія Олійник"
-          },
-          "email": {
-            "description": "Email address of the user",
-            "type": "string",
-            "format": "email",
-            "maxLength": 64,
-            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
-            "example": "anastasiaoliynyk@mail.com"
-          },
-          "password": {
-            "description": "Password of the user",
-            "type": "string",
-            "format": "password",
-            "minLength": 8,
-            "maxLength": 64,
-            "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
-            "example": "Password123"
-          },
-          "avatar": {
-            "description": "Avatar of the user (max size 1MB)",
-            "type": "string"
-          }
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата створення користувача",
+      "example": "2025-03-27T12:34:56.789Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата останнього оновлення користувача",
+      "example": "2025-04-01T09:21:30.123Z"
+    }
+  }
+    },
+    "AuthUser": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 64,
+          "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+          "example": "user@example.com"
+        },
+        "password": {
+          "type": "string",
+          "format": "password",
+          "minLength": 8,
+          "maxLength": 64,
+          "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
+          "example": "Password123"
         }
       }
     },
+    "LoginResponse": {
+      "type": "object",
+      "required": ["token", "refreshToken"],
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "JWT access token"
+        },
+        "refreshToken": {
+          "type": "string",
+          "description": "JWT refresh token"
+        }
+      }
+    },
+    "RefreshTokenRequest": {
+      "type": "object",
+      "required": ["refreshToken"],
+      "properties": {
+        "refreshToken": {
+          "type": "string",
+          "example": "your_refresh_token_here"
+        }
+      }
+    },
+    "RegisterUser": {
+      "type": "object",
+      "required": ["name", "email", "password"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 32,
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 64,
+          "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+          "example": "user@example.com"
+        },
+        "password": {
+          "type": "string",
+          "format": "password",
+          "minLength": 8,
+          "maxLength": 64,
+          "pattern": "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$",
+          "example": "Password123"
+        },
+        "avatar": {
+          "type": "string",
+          "format": "binary",
+          "description": "Avatar of the user (max size 1MB)"
+        }
+      }
+    },
+    "Article": {
+  "type": "object",
+  "required": [
+    "ownerId",
+    "title",
+    "desc",
+    "img",
+    "date",
+    "authorName"
+  ],
+  "properties": {
+    "ownerId": {
+      "type": "string",
+      "description": "ID автора статті (ObjectId)",
+      "example": "65e4decdd286b30065d54af9"
+    },
+    "title": {
+      "type": "string",
+      "description": "Назва статті",
+      "minLength": 3,
+      "maxLength": 48,
+      "example": "Коли тривога заповнює простір: шлях до спокою"
+    },
+    "desc": {
+      "type": "string",
+      "description": "Короткий опис статті",
+      "minLength": 100,
+      "maxLength": 4000,
+      "example": "Медитації, які допомагають відновити внутрішній спокій"
+    },
+    "img": {
+      "type": "string",
+      "description": "URL зображення статті",
+      "example": "https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Дата створення статті у форматі YYYY-MM-DD",
+      "example": "2025-03-27"
+    },
+    "authorName": {
+      "type": "string",
+      "description": "Імʼя автора статті",
+      "minLength": 4,
+      "maxLength": 50,
+      "example": "Анастасія Олійник"
+    },
+    "_id": {
+      "type": "string",
+      "description": "Унікальний ідентифікатор статті",
+      "example": "68498236a100312bea078fe6"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата створення документу",
+      "example": "2025-03-27T12:34:56.789Z"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Дата останнього оновлення документу",
+      "example": "2025-04-01T09:21:30.123Z"
+    }
+  }
+}
+
+  },
     "responses": {
       "400": {
         "description": "Bad request error",
@@ -1345,8 +1436,7 @@
                   ],
                   "properties": {
                     "message": {
-                      "type": "string",
-                      "example": "Bad Request"
+                      "type": "string"
                     }
                   }
                 }
@@ -1487,5 +1577,5 @@
         }
       }
     }
-  }
+}
 }

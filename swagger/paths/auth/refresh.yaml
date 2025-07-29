@@ -1,0 +1,20 @@
+post:
+  tags:
+    - Auth
+  summary: Refresh tokens
+  operationId: refreshToken
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/auth.yaml#/RefreshTokenRequest
+  responses:
+    '200':
+      description: Successfully refreshed a session!
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/auth.yaml#/LoginResponse
+    '401':
+      $ref: ../../components/responses/401.yaml
