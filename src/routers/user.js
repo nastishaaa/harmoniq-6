@@ -6,11 +6,15 @@ import {
   addSavedArticle,
   removeSavedArticle,
   getAllAuthors,
+  getAuthorById,
+  getArticlesByAuthorId,
 } from '../controllers/user.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
 router.get('/authors', getAllAuthors);
+router.get('/authors/:id', getAuthorById);
+router.get('/authors/:id/articles', getArticlesByAuthorId);
 router.use(authenticate);
 
 router.get('/me', getCurrentUser);
