@@ -28,7 +28,6 @@ const articleSchema = new mongoose.Schema(
       required: [true, 'Дата є обовʼязковою'],
       validate: {
         validator: function (v) {
-          // Перевірка на формат 'рррр-мм-дд'
           return /^\d{4}-\d{2}-\d{2}$/.test(v.toISOString().split('T')[0]);
         },
         message: (props) => `Дата повинна бути у форматі 'рррр-мм-дд'`,
