@@ -42,3 +42,51 @@ export const removeSavedArticle = async (userId, articleId) => {
 export const getAllAuthors = async () => {
   return await User.find({}, 'name avatarUrl');
 };
+
+export const getAuthorById = async (id) => {
+  const author = await User.findById(id).select('name avatarUrl');
+  if (!author) throw createHttpError(404, 'Author not found');
+  return author;
+};
+
+export const getArticlesByAuthorId = async (id, page = 1, perPage = 12) => {
+  const skip = (page - 1) * perPage;
+
+  const [data, total] = await Promise.all([
+    Article.find({ ownerId: id }).skip(skip).limit(perPage),
+    Article.countDocuments({ ownerId: id }),
+  ]);
+
+  return {
+    data,
+    pagination: {
+      total,
+      page,
+      perPage,
+      hasMore: page * perPage < total,
+    },
+  };
+};
+
+export const updateCurrentUser = async (userId, updateData) => {
+  const allowedFields = ['name', 'avatarUrl'];
+  const filteredData = {};
+
+  for (const key of allowedFields) {
+    if (updateData[key] !== undefined) {
+      filteredData[key] = updateData[key];
+    }
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, filteredData, {
+    new: true,
+    runValidators: true,
+    select: '-password',
+  });
+
+  if (!updatedUser) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  return updatedUser;
+};
