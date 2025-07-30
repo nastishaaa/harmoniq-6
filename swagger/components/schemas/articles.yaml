@@ -1,55 +1,54 @@
-Article:
-  type: object
-  required:
-    - _id
-    - title
-    - desc
-    - rate
-    - img
-    - ownerId
-    - authorName
-    - date
-  properties:
-    _id:
-      description: Article id
-      type: string
-      example: '68498236a100312bea078fe6'
-    title:
-      description: Article title
-      type: string
-      minLength: 3
-      maxLength: 48
-      example: 'Коли тривога заповнює простір: шлях до спокою'
-    desc:
-      description: Full article text
-      type: string
-      minLength: 100
-      maxLength: 4000
-      example: 'Медитації, які допомагають відновити внутрішній спокій'
-    rate:
-      description: Article rating
-      type: number
-      minimum: 0
-      maximum: 100
-      example: 16
-    ownerId:
-      description: Article author's user ID
-      type: string
-      example: '68498236a100312bea078fe6'
-    img:
-      description: Image URL
-      format: binary
-      type: string
-      example: 'https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg'
-    date:
-      description: Article creation date (YYYY-MM-DD)
-      type: string
-      format: date
-      pattern: ^\d{4}-\d{2}-\d{2}$
-      example: 2025-03-27
-    authorName:
-      description: Author's full name
-      type: string
-      minLength: 4
-      maxLength: 50
-      example: 'Анастасія Олійник'
+type: object
+required:
+  - _id
+  - title
+  - desc
+  - rate
+  - img
+  - ownerId
+  - authorName
+  - date
+properties:
+  _id:
+    description: Article id
+    type: string
+    example: '68498236a100312bea078fe6'
+  title:
+    description: Article title
+    type: string
+    minLength: 3
+    maxLength: 48
+    example: 'Коли тривога заповнює простір: шлях до спокою'
+  desc:
+    description: Full article text
+    type: string
+    minLength: 100
+    maxLength: 4000
+    example: 'Медитації, які допомагають відновити внутрішній спокій'
+  rate:
+    description: Article rating
+    type: number
+    minimum: 0
+    maximum: 100
+    example: 16
+  ownerId:
+    description: Article author's user ID
+    type: string
+    example: '68498236a100312bea078fe6'
+  img:
+    description: Image URL
+    format: binary
+    type: string
+    example: 'https://ftp.goit.study/img/harmoniq/f12e886489f94b5886d03e95vn.jpg'
+  date:
+    description: Article creation date (YYYY-MM-DD)
+    type: string
+    format: date
+    pattern: ^\d{4}-\d{2}-\d{2}$
+    example: 2025-03-27
+  authorName:
+    description: Author's full name
+    type: string
+    minLength: 4
+    maxLength: 50
+    example: 'Анастасія Олійник'
