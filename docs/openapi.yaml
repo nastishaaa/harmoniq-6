@@ -42,23 +42,36 @@ paths:
       $ref: ../swagger/paths/articles/{articleId}/patch.yaml
     delete:
       $ref: ../swagger/paths/articles/{articleId}/delete.yaml
-  /users/profile:
-    get:
-      $ref: ../swagger/paths/users/profile/get.yaml
 
-  /users/saved:
+  /users/authors:
     get:
-      $ref: ../swagger/paths/users/saved/get.yaml
-    post:
-      $ref: ../swagger/paths/users/saved/post.yaml
+      $ref: ../swagger/paths/users/authors/get.yaml
 
-  /users/saved/{articleId}:
+  /users/authors/{id}:
+    get:
+      $ref: ../swagger/paths/users/authors/{id}/get.yaml
+
+  /users/authors/{id}/articles:
+    get:
+      $ref: ../swagger/paths/users/authors/{id}/articles/get.yaml
+
+  /users/me:
+    get:
+      $ref: ../swagger/paths/users/me/get.yaml
+
+  /users/me/saved-articles:
+    get:
+      $ref: ../swagger/paths/users/me/saved-articles/get.yaml
+
+  /users/me/saved-articles/{articleId}:
     delete:
-      $ref: ../swagger/paths/users/saved/{articleId}/delete.yaml
+      $ref: ../swagger/paths/users/me/saved-articles/{articleId}/delete.yaml
+    post:
+      $ref: ../swagger/paths/users/me/saved-articles/{articleId}/post.yaml
 
-  /users/created:
+  /users/me/created:
     get:
-      $ref: ../swagger/paths/users/created/get.yaml
+      $ref: ../swagger/paths/users/me/created-articles/get.yaml
 
   /categories:
     get:
@@ -79,7 +92,7 @@ components:
     RegisterUser:
       $ref: '../swagger/components/schemas/auth.yaml#/RegisterUser'
     Article:
-      $ref: '../swagger/components/schemas/articles.yaml#/Article'
+      $ref: '../swagger/components/schemas/articles.yaml#'
 
   responses:
     '400':
