@@ -15,12 +15,13 @@ import {
 import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
-router.get('/authors', getAllAuthors);
-router.get('/authors/:id', getAuthorById);
-router.get('/authors/:id/articles', getArticlesByAuthorId);
-router.use(authenticate);
 
-router.get('/me', getCurrentUser);
+router.get('/', getAllAuthors);
+router.get('/me', authenticate, getCurrentUser);
+router.get('/:id/articles', getArticlesByAuthorId);
+router.get('/:id', getAuthorById);
+
+router.use(authenticate);
 router.patch('/me', validateBody(userUpdateSchema), updateCurrentUser);
 router.get('/me/saved-articles', getSavedArticles);
 router.get('/me/created-articles', getCreatedArticles);
