@@ -2,6 +2,7 @@ tags:
   - Users
 summary: Get all authors
 description: Returns a list of all authors with their name and avatar.
+security: []
 operationId: getAllAuthors
 responses:
   '200':

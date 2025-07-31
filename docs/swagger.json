@@ -48,6 +48,7 @@
         ],
         "summary": "Register new user",
         "operationId": "registerUser",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -142,11 +143,7 @@
         "summary": "Login user",
         "operationId": "loginUser",
         "description": "Login user with email and password",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -185,11 +182,7 @@
         "summary": "logout user",
         "operationId": "logoutUser",
         "description": "Logout the currently authenticated user by invalidating the access token.",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [],
         "responses": {
           "204": {
             "description": "User successfully logged out."
@@ -210,6 +203,7 @@
         ],
         "summary": "Refresh tokens",
         "operationId": "refreshToken",
+        "security": [],
         "requestBody": {
           "required": true,
           "content": {
@@ -245,11 +239,7 @@
         "summary": "Get list of articles",
         "operationId": "getArticles",
         "description": "Get list of articles with optional pagination, sorting and filtering",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -484,11 +474,7 @@
         "summary": "Get article by id",
         "operationId": "getArticle",
         "description": "Unique identifier of the article to retrieve",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "path",
@@ -689,12 +675,13 @@
         }
       }
     },
-  "/users/authors": {
+  "/users": {
   "get": {
     "tags": ["User"],
     "summary": "Get all authors",
     "operationId": "getAllAuthors",
     "description": "Returns a list of all authors with their name and avatar URL",
+    "security": [],
     "responses": {
       "200": {
         "description": "Successfully fetched all authors",
@@ -759,7 +746,7 @@
     }
   }
 },
-    "/users/authors/{id}": {
+    "/users/{id}": {
       "get": {
         "summary": "Get author by ID",
         "operationId": "getAuthorById",
@@ -804,11 +791,12 @@
       }
     },
 
-    "/users/authors/{id}/articles": {
+    "/users/{id}/articles": {
       "get": {
         "summary": "Get articles by author ID",
         "operationId": "getArticlesByAuthor",
         "tags": ["User"],
+        "security": [],
         "parameters": [
           {
             "name": "id",
@@ -898,11 +886,7 @@
         "summary": "Get current user info with personal and saved articles",
         "operationId": "getCurrentUser",
         "description": "Returns full information about the authenticated user, including personal and saved articles",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "security": [],
         "responses": {
           "200": {
             "description": "Successfully retrieved user profile with articles",
@@ -971,7 +955,93 @@
             "$ref": "#/components/responses/401"
           }
         }
+      },
+      "patch": {
+  "summary": "Update current user's data",
+  "description": "Allows an authenticated user to update their own name or avatar URL.",
+  "tags": [
+    "User"
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "requestBody": {
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Анастасія Олійник"
+            },
+            "avatarUrl": {
+              "type": "string",
+              "format": "uri",
+              "example": "https://example.com/avatar.jpg"
+            }
+          },
+          "additionalProperties": false
+        }
       }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Successfully updated user data",
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "example": 200
+              },
+              "message": {
+                "type": "string",
+                "example": "Successfully updated user data!"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "64acb0e4f2c9876c12345678"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Анастасія Олійник"
+                  },
+                  "avatarUrl": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "https://example.com/avatar.jpg"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "400": {
+      "$ref": "#/components/responses/400"
+    },
+    "401": {
+      "$ref": "#/components/responses/401"
+    },
+    "404": {
+      "$ref": "#/components/responses/404"
+    },
+    "500": {
+      "description": "Internal Server Error"
+    }
+  }
+}
     },
     "/users/me/saved-articles": {
       "get": {
