@@ -43,21 +43,26 @@ paths:
     delete:
       $ref: ../swagger/paths/articles/{articleId}/delete.yaml
 
-  /users/authors:
+  /users:
     get:
-      $ref: ../swagger/paths/users/authors/get.yaml
+      $ref: ../swagger/paths/users/get.yaml
 
-  /users/authors/{id}:
+  /users/{id}:
     get:
-      $ref: ../swagger/paths/users/authors/{id}/get.yaml
+      $ref: ../swagger/paths/users/{id}/get.yaml
 
-  /users/authors/{id}/articles:
+  /users/{id}/articles:
     get:
-      $ref: ../swagger/paths/users/authors/{id}/articles/get.yaml
+      $ref: ../swagger/paths/users/{id}/articles/get.yaml
 
   /users/me:
     get:
       $ref: ../swagger/paths/users/me/get.yaml
+      
+  /users/me:
+    patch: 
+      $ref: ../swagger/paths/users/me/patch.yaml
+      
 
   /users/me/saved-articles:
     get:
@@ -100,5 +105,3 @@ components:
     '401':
       $ref: '../swagger/components/responses/401.yaml'
 
-security:
-  - bearerAuth: []

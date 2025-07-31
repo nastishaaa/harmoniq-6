@@ -3,6 +3,7 @@ tags:
 summary: Get list of articles
 operationId: getArticles
 description: 'Get list of articles with optional pagination, sorting and filtering'
+security: []
 parameters:
   - in: query
     name: page

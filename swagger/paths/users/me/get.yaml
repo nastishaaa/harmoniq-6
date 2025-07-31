@@ -3,8 +3,7 @@ tags:
 summary: Get current user info with personal and saved articles
 operationId: getCurrentUser
 description: Returns full information about the authenticated user, including personal and saved articles
-security:
-  - bearerAuth: []
+security: []
 responses:
   '200':
     description: Successfully retrieved user profile with articles
