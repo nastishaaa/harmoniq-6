@@ -39,8 +39,23 @@ export const removeSavedArticle = async (userId, articleId) => {
   return await user.save();
 };
 
-export const getAllAuthors = async () => {
-  return await User.find({}, 'name avatarUrl');
+export const getAllAuthors = async (page = 1, perPage = 10) => {
+  const skip = (page - 1) * perPage;
+
+  const [data, total] = await Promise.all([
+    User.find({}, 'name avatarUrl').skip(skip).limit(perPage),
+    User.countDocuments(),
+  ]);
+
+  return {
+    data,
+    pagination: {
+      total,
+      page,
+      perPage,
+      hasMore: page * perPage < total,
+    },
+  };
 };
 
 export const getAuthorById = async (id) => {
