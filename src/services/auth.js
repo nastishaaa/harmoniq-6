@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
-import crypto from 'node:crypto';
+import crypto, { randomBytes } from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -42,29 +42,53 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email }).select('+password');
+   const user = await User.findOne({ email: payload.email });
+    if (!user) {
+        throw createHttpError(401, 'User not found');
+    }
 
-  if (!user) {
-    throw createHttpError(401, 'User login and password does not match!');
-  }
+    const isEqual = await bcrypt.compare(payload.password, user.password); 
+    if (!isEqual) {
+        throw createHttpError(401, 'Unauthorized');
+    }
+
+    await Session.deleteOne({ userId: user._id });
+    const accessToken = randomBytes(30).toString('base64');
+    const refreshToken = randomBytes(30).toString('base64');
+
+    return await Session.create({
+        userId: user._id,
+        accessToken,
+        refreshToken,
+        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+        refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
+    });
+  // const user = await User.findOne({ email: payload.email }).select('+password');
+
+  // if (!user) {
+  //   throw createHttpError(401, 'User login and password does not match!');
+  // }
   
-  const arePasswordsEqual = await bcrypt.compare(
-    payload.password,
-    user.password,
-  );
+  // const arePasswordsEqual = await bcrypt.compare(
+  //   payload.password,
+  //   user.password,
+  // );
 
-  if (!arePasswordsEqual) {
-    throw createHttpError(401, 'User login and password does not match!');
-  }
+  // if (!arePasswordsEqual) {
+  //   throw createHttpError(401, 'User login and password does not match!');
+  // }
 
-  await Session.findOneAndDelete({ userId: user._id });
+  // await Session.findOneAndDelete({ userId: user._id });
 
-  const session = await Session.create({
-    ...createSession(),
-    userId: user._id,
-  });
+  // await Session.create({
+  //   ...createSession(),
+  //   userId: user._id,
+  // });
 
-  return session;
+  // // return session;
+  // return await User.create({
+  //       ...payload,
+  //   });
 };
 
 export const logoutUser = async (sessionId, sessionToken) => {
