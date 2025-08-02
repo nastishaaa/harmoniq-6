@@ -62,7 +62,7 @@ responses:
                 data:
                   type: array
                   items:
-                    $ref: '../../components/schemas/articles.yaml'
+                    $ref: '../../components/schemas/articles.yaml#/components/schemas/Article'
                 page:
                   type: number
                   example: 1

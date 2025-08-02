@@ -11,7 +11,8 @@ responses:
         schema:
           type: array
           items:
-            $ref: '../../../../components/schemas/articles.yaml'
+            $ref: '../../../../components/schemas/articles.yaml#/components/schemas/Article'
+
   '401':
     description: Unauthorized request
   '500':

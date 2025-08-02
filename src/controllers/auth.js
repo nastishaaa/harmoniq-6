@@ -1,3 +1,4 @@
+import User from '../db/models/user.js';
 import {
   loginUser,
   logoutUser,
@@ -32,14 +33,23 @@ export const registerUserController = async (req, res) => {
 
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
-
+  const user = await User.findById(session.userId).select('-password');
   setupSessionCookies(session, res);
 
-  res.json({
+  res.status(200).json({
     status: 200,
     message: 'Successfully logged in a user!',
     data: {
-      accessToken: session.accessToken,
+      token: session.accessToken,
+      refreshToken: session.refreshToken,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatarUrl,
+        articlesAmount: user.articlesAmount,
+        savedArticles: user.savedArticles,
+      },
     },
   });
 };
