@@ -42,7 +42,9 @@ export const registerUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-   const user = await User.findOne({ email: payload.email });
+  try {
+    const user = await User.findOne({ email: payload.email }).select('+password');
+
     if (!user) {
         throw createHttpError(401, 'User not found');
     }
@@ -60,9 +62,13 @@ export const loginUser = async (payload) => {
         userId: user._id,
         accessToken,
         refreshToken,
-        accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-        refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
+        accessTokenValidUntil: new Date(Date.now() + 1000 * 60 * 15),
+        refreshTokenValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     });
+  } catch (error) {
+    console.error('Login error:', error); // <--- додай це
+  }
+
   // const user = await User.findOne({ email: payload.email }).select('+password');
 
   // if (!user) {
