@@ -44,11 +44,13 @@ responses:
                   type: array
                   description: List of articles authored by the user
                   items:
-                    $ref: '../../../components/schemas/articles.yaml'
+                    $ref: '../../../components/schemas/articles.yaml#/components/schemas/Article'
+
                 savedArticles:
                   type: array
                   description: List of saved articles by the user
                   items:
-                    $ref: '../../../components/schemas/articles.yaml'
+                    $ref: '../../../components/schemas/articles.yaml#/components/schemas/Article'
+
   '401':
     $ref: '../../../components/responses/401.yaml'

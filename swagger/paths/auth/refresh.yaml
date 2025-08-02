@@ -3,6 +3,7 @@ post:
     - Auth
   summary: Refresh tokens
   operationId: refreshToken
+  security: []
   requestBody:
     required: true
     content:

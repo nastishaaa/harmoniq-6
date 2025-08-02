@@ -71,7 +71,7 @@ responses:
               example: Successfully created a article!
             data:
               type: object
-              $ref: ../../components/schemas/articles.yaml
+              $ref: '../../components/schemas/articles.yaml#/components/schemas/Article'
   '400':
     $ref: ../../components/responses/400.yaml
   '401':
