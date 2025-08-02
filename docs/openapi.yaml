@@ -31,56 +31,56 @@ paths:
 
   /articles:
     get:
-      $ref: ./paths/articles/get.yaml
+      $ref: ../swagger/paths/articles/get.yaml
     post:
-      $ref: ./paths/articles/post.yaml
+      $ref: ../swagger/paths/articles/post.yaml
 
   /articles/{articleId}:
     get:
-      $ref: ./paths/articles/{articleId}/get.yaml
+      $ref: ../swagger/paths/articles/{articleId}/get.yaml
     patch:
-      $ref: ./paths/articles/{articleId}/patch.yaml
+      $ref: ../swagger/paths/articles/{articleId}/patch.yaml
     delete:
-      $ref: ./paths/articles/{articleId}/delete.yaml
+      $ref: ../swagger/paths/articles/{articleId}/delete.yaml
 
   /users:
     get:
-      $ref: ./paths/users/get.yaml
+      $ref: ../swagger/paths/users/get.yaml
 
   /users/{id}:
     get:
-      $ref: ./paths/users/{id}/get.yaml
+      $ref: ../swagger/paths/users/{id}/get.yaml
 
   /users/{id}/articles:
     get:
-      $ref: ./paths/users/{id}/articles/get.yaml
+      $ref: ../swagger/paths/users/{id}/articles/get.yaml
 
   /users/me:
     get:
-      $ref: ./paths/users/me/get.yaml
+      $ref: ../swagger/paths/users/me/get.yaml
       
   /users/me:
     patch: 
-      $ref: ./paths/users/me/patch.yaml
+      $ref: ../swagger/paths/users/me/patch.yaml
       
 
   /users/me/saved-articles:
     get:
-      $ref: ./paths/users/me/saved-articles/get.yaml
+      $ref: ../swagger/paths/users/me/saved-articles/get.yaml
 
   /users/me/saved-articles/{articleId}:
     delete:
-      $ref: ./paths/users/me/saved-articles/{articleId}/delete.yaml
+      $ref: ../swagger/paths/users/me/saved-articles/{articleId}/delete.yaml
     post:
-      $ref: ./paths/users/me/saved-articles/{articleId}/post.yaml
+      $ref: ../swagger/paths/users/me/saved-articles/{articleId}/post.yaml
 
   /users/me/created:
     get:
-      $ref: ./paths/users/me/created-articles/get.yaml
+      $ref: ../swagger/paths/users/me/created-articles/get.yaml
 
   /categories:
     get:
-      $ref: ./paths/categories/get.yaml
+      $ref: ../swagger/paths/categories/get.yaml
 components:
   securitySchemes:
     bearerAuth:
@@ -97,7 +97,7 @@ components:
     RegisterUser:
       $ref: '../swagger/components/schemas/auth.yaml#/RegisterUser'
     Article:
-      $ref: '../swagger/components/schemas/articles.yaml#'
+      $ref: '../swagger/components/schemas/articles.yaml#/components/schemas/Article'
 
   responses:
     '400':
@@ -105,5 +105,3 @@ components:
     '401':
       $ref: '../swagger/components/responses/401.yaml'
 
-security:
-  - bearerAuth: []

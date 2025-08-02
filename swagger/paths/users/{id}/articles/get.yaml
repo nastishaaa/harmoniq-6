@@ -40,7 +40,7 @@ responses:
             data:
               type: array
               items:
-                $ref: ../../../../components/schemas/articles.yaml
+                $ref: ../../../../components/schemas/articles.yaml#/Article
             pagination:
               type: object
               properties:
