@@ -1,0 +1,27 @@
+summary: Get author by ID
+security: []
+tags:
+  - User
+parameters:
+  - name: id
+    in: path
+    required: true
+    description: The ID of the author
+    schema:
+      type: string
+responses:
+  '200':
+    description: Successfully retrieved author
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+            name:
+              type: string
+            avatarUrl:
+              type: string
+  '404':
+    $ref: ../../../components/responses/404.yaml

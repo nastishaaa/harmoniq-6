@@ -3,8 +3,7 @@ tags:
 summary: Get current user info with personal and saved articles
 operationId: getCurrentUser
 description: Returns full information about the authenticated user, including personal and saved articles
-security:
-  - bearerAuth: []
+security: []
 responses:
   '200':
     description: Successfully retrieved user profile with articles
@@ -45,11 +44,13 @@ responses:
                   type: array
                   description: List of articles authored by the user
                   items:
-                    $ref: '../../../components/schemas/articles.yaml'
+                    $ref: '../../../components/schemas/articles.yaml#/components/schemas/Article'
+
                 savedArticles:
                   type: array
                   description: List of saved articles by the user
                   items:
-                    $ref: '../../../components/schemas/articles.yaml'
+                    $ref: '../../../components/schemas/articles.yaml#/components/schemas/Article'
+
   '401':
     $ref: '../../../components/responses/401.yaml'

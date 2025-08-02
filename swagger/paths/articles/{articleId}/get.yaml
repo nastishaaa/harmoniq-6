@@ -3,8 +3,7 @@ tags:
 summary: Get article by id
 operationId: getArticle
 description: Unique identifier of the article to retrieve
-security:
-  - bearerAuth: []
+security: []
 parameters:
   - in: path
     name: articleId
@@ -32,8 +31,7 @@ responses:
               example: Successfully found article with provided ID
             data:
               type: object
-              $ref: ../../../components/schemas/articles.yaml
-  '401':
+              $ref: '../../../../components/schemas/articles.yaml#/components/schemas/Article'
     $ref: '../../../components/responses/401.yaml'
   '404':
     $ref: '../../../components/responses/404.yaml'

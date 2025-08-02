@@ -5,22 +5,16 @@ operationId: saveArticleToUser
 description: Save an article to user's saved list
 security:
   - bearerAuth: []
-requestBody:
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        required:
-          - articleId
-        properties:
-          articleId:
-            type: string
-            description: ID of article to save
-            example: '65ca67e7ae7f10c88b598384'
+parameters:
+  - name: articleId
+    in: path
+    required: true
+    schema:
+      type: string
+    description: ID of article to save
 responses:
   '201':
-    description: 'Successfully saved article to user list'
+    description: Successfully saved article to user list
     content:
       application/json:
         schema:
@@ -37,11 +31,10 @@ responses:
               type: string
               example: Article successfully added to saved list
             data:
-              type: object
-              $ref: ../../../components/schemas/articles.yaml
+              $ref: ../../../../../components/schemas/articles.yaml
   '400':
-    $ref: ../../../components/responses/400.yaml
+    $ref: '../../../../../components/responses/400.yaml'
   '401':
-    $ref: ../../../components/responses/401.yaml
+    $ref: '../../../../../components/responses/401.yaml'
   '409':
-    $ref: ../../../components/responses/401.yaml
+    $ref: '../../../../../components/responses/409.yaml'

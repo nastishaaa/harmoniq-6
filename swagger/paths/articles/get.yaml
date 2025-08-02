@@ -3,8 +3,7 @@ tags:
 summary: Get list of articles
 operationId: getArticles
 description: 'Get list of articles with optional pagination, sorting and filtering'
-security:
-  - bearerAuth: []
+security: []
 parameters:
   - in: query
     name: page
@@ -63,7 +62,7 @@ responses:
                 data:
                   type: array
                   items:
-                    $ref: '../../components/schemas/articles.yaml'
+                    $ref: '../../components/schemas/articles.yaml#/components/schemas/Article'
                 page:
                   type: number
                   example: 1

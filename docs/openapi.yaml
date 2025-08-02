@@ -29,40 +29,55 @@ paths:
   /auth/refresh:
     $ref: ../swagger/paths/auth/refresh.yaml
 
-  /articles:
-    get:
-      $ref: ../swagger/paths/articles/get.yaml
-    post:
-      $ref: ../swagger/paths/articles/post.yaml
+    /articles:
+      get:
+        $ref: ../swagger/paths/articles/get.yaml
+      post:
+        $ref: ../swagger/paths/articles/post.yaml
 
-  /articles/{articleId}:
-    get:
-      $ref: ../swagger/paths/articles/{articleId}/get.yaml
-    patch:
-      $ref: ../swagger/paths/articles/{articleId}/patch.yaml
-    delete:
-      $ref: ../swagger/paths/articles/{articleId}/delete.yaml
-  /users/profile:
-    get:
-      $ref: ../swagger/paths/users/profile/get.yaml
+    /articles/{articleId}:
+      get:
+        $ref: ../swagger/paths/articles/{articleId}/get.yaml
+      patch:
+        $ref: ../swagger/paths/articles/{articleId}/patch.yaml
+      delete:
+        $ref: ../swagger/paths/articles/{articleId}/delete.yaml
 
-  /users/saved:
-    get:
-      $ref: ../swagger/paths/users/saved/get.yaml
-    post:
-      $ref: ../swagger/paths/users/saved/post.yaml
+    /users:
+      get:
+        $ref: ../swagger/paths/users/get.yaml
 
-  /users/saved/{articleId}:
-    delete:
-      $ref: ../swagger/paths/users/saved/{articleId}/delete.yaml
+    /users/{id}:
+      get:
+        $ref: ../swagger/paths/users/{id}/get.yaml
 
-  /users/created:
-    get:
-      $ref: ../swagger/paths/users/created/get.yaml
+    /users/{id}/articles:
+      get:
+        $ref: ../swagger/paths/users/{id}/articles/get.yaml
 
-  /categories:
-    get:
-      $ref: ../swagger/paths/categories/get.yaml
+    /users/me:
+      get:
+        $ref: ../swagger/paths/users/me/get.yaml
+      patch:
+        $ref: ../swagger/paths/users/me/patch.yaml
+
+    /users/me/saved-articles:
+      get:
+        $ref: ../swagger/paths/users/me/saved-articles/get.yaml
+
+    /users/me/saved-articles/{articleId}:
+      delete:
+        $ref: ../swagger/paths/users/me/saved-articles/{articleId}/delete.yaml
+      post:
+        $ref: ../swagger/paths/users/me/saved-articles/{articleId}/post.yaml
+
+    /users/me/created:
+      get:
+        $ref: ../swagger/paths/users/me/created-articles/get.yaml
+
+    /categories:
+      get:
+        $ref: ../swagger/paths/categories/get.yaml
 components:
   securitySchemes:
     bearerAuth:
@@ -79,13 +94,10 @@ components:
     RegisterUser:
       $ref: '../swagger/components/schemas/auth.yaml#/RegisterUser'
     Article:
-      $ref: '../swagger/components/schemas/articles.yaml#/Article'
+      $ref: '../swagger/components/schemas/articles.yaml#/components/schemas/Article'
 
   responses:
     '400':
       $ref: '../swagger/components/responses/400.yaml'
     '401':
       $ref: '../swagger/components/responses/401.yaml'
-
-security:
-  - bearerAuth: []

@@ -55,6 +55,7 @@ LoginResponse:
   required:
     - token
     - refreshToken
+    - user
   properties:
     token:
       type: string
@@ -62,7 +63,8 @@ LoginResponse:
     refreshToken:
       type: string
       description: JWT refresh token
-
+    user:
+      $ref: './auth.yaml#/FullUser'
 # Для refresh запиту
 RefreshTokenRequest:
   type: object
