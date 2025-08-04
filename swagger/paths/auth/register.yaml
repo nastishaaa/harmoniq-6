@@ -3,6 +3,7 @@ post:
     - Auth
   summary: Register new user
   operationId: registerUser
+  security: []
   requestBody:
     required: true
     content:

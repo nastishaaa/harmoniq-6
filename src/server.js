@@ -19,7 +19,16 @@ export const startServer = async () => {
   app.use('/api-docs', setupSwagger());
   app.use('/docs', swaggerServe, swaggerDocs);
   app.use(express.json());
-  app.use(cors());
+  app.use(cors(
+    {
+      //потім додати живу сторінку
+      origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'https://harmoniq-6-frontend.vercel.app'],
+  credentials: true
+}
+  ));
   app.use(cookieParser());
   app.use('/', router);
   app.use(

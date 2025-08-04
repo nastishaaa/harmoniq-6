@@ -97,7 +97,7 @@ components:
     RegisterUser:
       $ref: '../swagger/components/schemas/auth.yaml#/RegisterUser'
     Article:
-      $ref: '../swagger/components/schemas/articles.yaml#'
+      $ref: '../swagger/components/schemas/articles.yaml#/components/schemas/Article'
 
   responses:
     '400':
