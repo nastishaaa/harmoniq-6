@@ -26,7 +26,9 @@ export const startServer = async () => {
 //   credentials: true
 // }
   // ));
-  app.use(cors());
+  app.use(cors({
+    credentials: true,
+  }));
   app.use(cookieParser());
   app.use('/', router);
   app.use(
