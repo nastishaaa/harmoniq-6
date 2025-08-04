@@ -22,7 +22,7 @@ export const startServer = async () => {
   app.use(cors(
     {
       //потім додати живу сторінку
-  origin: 'http://localhost:5173', 
+  origin: ['http://localhost:5173', 'https://harmoniq-6-frontend.vercel.app'],
   credentials: true
 }
   ));
