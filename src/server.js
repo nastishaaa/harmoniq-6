@@ -19,7 +19,12 @@ export const startServer = async () => {
   app.use('/api-docs', setupSwagger());
   app.use('/docs', swaggerServe, swaggerDocs);
   app.use(express.json());
-  app.use(cors());
+  app.use(cors(
+    {
+  origin: 'http://localhost:5173', // вказати твій фронтенд точно, без '*'
+  credentials: true
+}
+  ));
   app.use(cookieParser());
   app.use('/', router);
   app.use(
