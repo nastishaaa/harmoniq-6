@@ -21,7 +21,8 @@ export const startServer = async () => {
   app.use(express.json());
   app.use(cors(
     {
-  origin: 'http://localhost:5173', // вказати твій фронтенд точно, без '*'
+      //потім додати живу сторінку
+  origin: 'http://localhost:5173', 
   credentials: true
 }
   ));
