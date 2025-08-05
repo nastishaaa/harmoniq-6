@@ -25,7 +25,8 @@ const setupSessionCookies = (session, res) => {
 
 
 export const registerUserController = async (req, res) => {
-  const user = await registerUser(req.body);
+  const avatarFile = req.file;
+  const user = await registerUser(req.body, avatarFile);
 
   res.status(201).json({
     status: 201,
