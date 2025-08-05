@@ -12,6 +12,7 @@ import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendEmail.js';
 import { ENV_VARS } from '../constants/envVars.js';
 import { TEMPLATE_DIR } from '../constants/paths.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 const resetPasswordTemplate = fs
   .readFileSync(path.join(TEMPLATE_DIR, 'reset-password-email-template.html'))
@@ -24,21 +25,27 @@ const createSession = () => ({
   refreshTokenValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
 });
 
-export const registerUser = async (payload) => {
+export const registerUser = async (payload, avatarFile) => {
   const existingUser = await User.findOne({ email: payload.email });
 
   if (existingUser) {
     throw createHttpError(409, 'Email in use!');
   }
-
+  let avatarUrl = '';
+  if (avatarFile) {
+    avatarUrl = await saveFileToCloudinary(avatarFile);
+  }
   const hashedPassword = await bcrypt.hash(payload.password, 10);
 
   const user = await User.create({
     ...payload,
     password: hashedPassword,
+    avatarUrl,
   });
+  const userObj = user.toObject();
+  delete userObj.password;
 
-  return user;
+  return userObj;
 };
 
 export const loginUser = async (payload) => {
@@ -47,7 +54,7 @@ export const loginUser = async (payload) => {
   if (!user) {
     throw createHttpError(401, 'User login and password does not match!');
   }
-  
+
   const arePasswordsEqual = await bcrypt.compare(
     payload.password,
     user.password,
