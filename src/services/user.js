@@ -39,7 +39,8 @@ export const removeSavedArticle = async (userId, articleId) => {
   return await user.save();
 };
 
-export const getAllAuthors = async (page = 1, perPage = 10) => {
+export const getAllAuthors = async (page = 1, perPage = 20) => {
+
   const skip = (page - 1) * perPage;
 
   const [data, total] = await Promise.all([

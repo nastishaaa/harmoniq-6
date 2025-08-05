@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
-import crypto from 'node:crypto';
+import crypto, { randomBytes } from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -49,29 +49,59 @@ export const registerUser = async (payload, avatarFile) => {
 };
 
 export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email }).select('+password');
+  try {
+    const user = await User.findOne({ email: payload.email }).select('+password');
 
-  if (!user) {
-    throw createHttpError(401, 'User login and password does not match!');
+    if (!user) {
+        throw createHttpError(401, 'User not found');
+    }
+
+    const isEqual = await bcrypt.compare(payload.password, user.password); 
+    if (!isEqual) {
+        throw createHttpError(401, 'Unauthorized');
+    }
+
+    await Session.deleteOne({ userId: user._id });
+    const accessToken = randomBytes(30).toString('base64');
+    const refreshToken = randomBytes(30).toString('base64');
+
+    return await Session.create({
+        userId: user._id,
+        accessToken,
+        refreshToken,
+        accessTokenValidUntil: new Date(Date.now() + 1000 * 60 * 15),
+        refreshTokenValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    });
+  } catch (error) {
+    console.error('Login error:', error); 
   }
 
-  const arePasswordsEqual = await bcrypt.compare(
-    payload.password,
-    user.password,
-  );
+  // const user = await User.findOne({ email: payload.email }).select('+password');
 
-  if (!arePasswordsEqual) {
-    throw createHttpError(401, 'User login and password does not match!');
-  }
+  // if (!user) {
+  //   throw createHttpError(401, 'User login and password does not match!');
+  // }
+  
+  // const arePasswordsEqual = await bcrypt.compare(
+  //   payload.password,
+  //   user.password,
+  // );
 
-  await Session.findOneAndDelete({ userId: user._id });
+  // if (!arePasswordsEqual) {
+  //   throw createHttpError(401, 'User login and password does not match!');
+  // }
 
-  const session = await Session.create({
-    ...createSession(),
-    userId: user._id,
-  });
+  // await Session.findOneAndDelete({ userId: user._id });
 
-  return session;
+  // await Session.create({
+  //   ...createSession(),
+  //   userId: user._id,
+  // });
+
+  // // return session;
+  // return await User.create({
+  //       ...payload,
+  //   });
 };
 
 export const logoutUser = async (sessionId, sessionToken) => {

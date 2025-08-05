@@ -11,15 +11,18 @@ import {
 const setupSessionCookies = (session, res) => {
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    secure: false,
+    secure: true,                
+    sameSite: 'None',           
     expires: session.refreshTokenValidUntil,
   });
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    secure: false,
+    secure: true,                
+    sameSite: 'None',            
     expires: session.refreshTokenValidUntil,
   });
 };
+
 
 export const registerUserController = async (req, res) => {
   const avatarFile = req.file;
