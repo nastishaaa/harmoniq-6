@@ -24,6 +24,7 @@ export const startServer = async () => {
       //потім додати живу сторінку
       origin: [
         'http://localhost:5173',
+        'http://localhost:3000',
         'http://localhost:5174',
         'https://harmoniq-6-frontend.vercel.app'],
   credentials: true
