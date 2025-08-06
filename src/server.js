@@ -24,6 +24,7 @@ export const startServer = async () => {
       //потім додати живу сторінку
       origin: [
         'http://localhost:5173',
+        'http://localhost:3000',
         'http://localhost:5174',
         'https://harmoniq-6-frontend.vercel.app'],
   credentials: true
@@ -44,5 +45,7 @@ export const startServer = async () => {
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    console.log(`My Swagger:       http://localhost:${PORT}/api-docs`);
+    console.log(`Team Swagger:       http://localhost:${PORT}/docs`);
   });
 };

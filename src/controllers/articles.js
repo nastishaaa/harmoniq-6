@@ -50,25 +50,16 @@ export const createArticleController = async (req, res) => {
             photoUrl = await saveFileToCloudinary(photo);
         }
 
-        console.log('📄 Article body before saving:', {
-            ...req.body,
-            img: photoUrl,
-            ownerId,
-        });
-
         const article = await createArticle(
             { ...req.body, img: photoUrl },
             ownerId,
         );
 
         res.status(201).json({
-            status: 201,
-            message: 'Successfully created an article!',
-            data: {
-                ownerId,
-                ...article.toObject(),
-            },
-        });
+    ownerId,
+    ...article.toObject(),
+});
+
     } catch (error) {
         console.error('❌ Error in createArticleController:', error);
         res.status(500).json({

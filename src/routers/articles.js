@@ -22,14 +22,23 @@ articlesRouter.get('/', getAllArticlesController);
 
 articlesRouter.get('/:articleId', isValidId, getArticleByIdController);
 
+// articlesRouter.post(
+//   '/',
+//   authenticate,
+//   upload.single('img'),
+//   attachImg,
+//   validateBody(articleValidationSchema),
+//   createArticleController,
+// );
+
 articlesRouter.post(
   '/',
   authenticate,
   upload.single('img'),
   attachImg,
-  validateBody(articleValidationSchema),
-  createArticleController,
+  createArticleController
 );
+
 
 articlesRouter.patch(
   '/:articleId',
