@@ -75,7 +75,6 @@ export const refreshSessionController = async (req, res) => {
   const session = await refreshSession(sessionId, refreshToken);
 
   setupSessionCookies(session, res);
-
   res.send({
     status: 200,
     message: 'Successfully refreshed a session!',

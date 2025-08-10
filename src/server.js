@@ -29,7 +29,7 @@ export const startServer = async () => {
         'https://harmoniq-6-frontend.vercel.app'],
   credentials: true
 }
-  ));
+    ));
   app.use(cookieParser());
   app.use('/', router);
   app.use(

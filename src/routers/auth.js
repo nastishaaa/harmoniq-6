@@ -28,7 +28,7 @@ authRouter.post(
   loginUserController,
 );
 authRouter.post('/logout', logoutUserController);
-authRouter.get('/refresh', refreshSessionController);
+// authRouter.get('/refresh', refreshSessionController);
 authRouter.post('/refresh', refreshSessionController);
 
 authRouter.post(
