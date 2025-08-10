@@ -32,12 +32,14 @@ export const removeSavedArticle = async (req, res) => {
 };
 
 export const getAllAuthors = async (req, res) => {
-
   const { page = 1, perPage = 20 } = req.query;
-
   const result = await userService.getAllAuthors(Number(page), Number(perPage));
+
   res.status(200).json({
     status: 200,
+    message: 'Successfully fetched authors!',
+    data: result.data,
+    pagination: result.pagination,
     message: 'Successfully fetched authors!',
     data: result.data,
     pagination: result.pagination,
